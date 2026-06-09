@@ -9,7 +9,7 @@ export default async function Home() {
   });
 
   if (session) {
-    redirect("/quiz");
+    redirect("/organizations");
   }
 
   return <LoginCard />;

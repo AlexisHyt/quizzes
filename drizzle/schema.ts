@@ -7,6 +7,7 @@ import {
   pgTable,
   text,
   timestamp,
+  uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core";
 
@@ -43,6 +44,8 @@ export const session = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
     impersonatedBy: text("impersonated_by"),
+    activeOrganizationId: text("active_organization_id"),
+    activeTeamId: text("active_team_id"),
   },
   (table) => [index("session_userId_idx").on(table.userId)],
 );
@@ -87,6 +90,68 @@ export const verification = pgTable(
   (table) => [index("verification_identifier_idx").on(table.identifier)],
 );
 
+export const organization = pgTable("organization", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+  logo: text("logo"),
+  metadata: text("metadata"),
+  createdAt: timestamp("created_at", {
+    precision: 6,
+    withTimezone: true,
+  }).notNull(),
+});
+
+export const member = pgTable("member", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  organizationId: text("organization_id")
+    .notNull()
+    .references(() => organization.id, { onDelete: "cascade" }),
+  role: text("role").notNull(),
+  createdAt: timestamp("created_at", {
+    precision: 6,
+    withTimezone: true,
+  }).notNull(),
+});
+
+export const invitation = pgTable("invitation", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull(),
+  inviterId: text("inviter_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  organizationId: text("organization_id")
+    .notNull()
+    .references(() => organization.id, { onDelete: "cascade" }),
+  role: text("role"),
+  status: text("status").notNull(),
+  createdAt: timestamp("created_at", {
+    precision: 6,
+    withTimezone: true,
+  }).notNull(),
+  expiresAt: timestamp("expires_at", {
+    precision: 6,
+    withTimezone: true,
+  }).notNull(),
+});
+
+export const organizationRole = pgTable("organization_role", {
+  id: text("id").primaryKey(),
+  organizationId: text("organization_id")
+    .notNull()
+    .references(() => organization.id, { onDelete: "cascade" }),
+  role: text("role").notNull(),
+  permission: text("permission").notNull(),
+  createdAt: timestamp("created_at", {
+    precision: 6,
+    withTimezone: true,
+  }).notNull(),
+  updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }),
+});
+
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
@@ -109,21 +174,36 @@ export const accountRelations = relations(account, ({ one }) => ({
 /**
  * Quizzes tables
  */
-export const quizzes = pgTable("quizzes", {
-  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  weekNumber: varchar("weekNumber", { length: 10 }).notNull().unique(), // S01, S02, etc.
-  date: varchar("date", { length: 10 }).notNull(), // YYYY-MM-DD format
-  label: text("label").notNull(), // Human readable date
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
-});
+export const quizzes = pgTable(
+  "quizzes",
+  {
+    id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+    weekNumber: varchar("weekNumber", { length: 10 }).notNull(), // S01, S02, etc.
+    date: varchar("date", { length: 10 }).notNull(), // YYYY-MM-DD format
+    label: text("label").notNull(), // Human readable date
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+    organizationId: text("organization_id")
+      .notNull()
+      .references(() => organization.id, { onDelete: "cascade" }),
+  },
+  (table) => [
+    index("quizzes_organizationId_idx").on(table.organizationId),
+    uniqueIndex("quizzes_organization_week_unique").on(
+      table.organizationId,
+      table.weekNumber,
+    ),
+  ],
+);
 
 export type Quiz = typeof quizzes.$inferSelect;
 export type InsertQuiz = typeof quizzes.$inferInsert;
 
 export const questions = pgTable("questions", {
-  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  quizId: integer("quizId").notNull(),
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  quizId: integer("quizId")
+    .notNull()
+    .references(() => quizzes.id, { onDelete: "cascade" }),
   questionText: text("questionText").notNull(),
   options: json("options").$type<string[]>().notNull(), // Array of answer options
   correctAnswer: integer("correctAnswer").notNull(), // Index of correct option (0-3)
@@ -137,15 +217,19 @@ export type Question = typeof questions.$inferSelect;
 export type InsertQuestion = typeof questions.$inferInsert;
 
 export const userResponses = pgTable("userResponses", {
-  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
   userId: text("userId")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   attemptId: integer("attemptId")
     .notNull()
     .references(() => quizAttempts.id, { onDelete: "cascade" }),
-  quizId: integer("quizId").notNull(),
-  questionId: integer("questionId").notNull(),
+  quizId: integer("quizId")
+    .notNull()
+    .references(() => quizzes.id, { onDelete: "cascade" }),
+  questionId: integer("questionId")
+    .notNull()
+    .references(() => questions.id, { onDelete: "cascade" }),
   selectedAnswer: integer("selectedAnswer").notNull(), // Index of selected option
   isCorrect: integer("isCorrect").notNull(), // 1 for correct, 0 for incorrect
   createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -156,11 +240,13 @@ export type UserResponse = typeof userResponses.$inferSelect;
 export type InsertUserResponse = typeof userResponses.$inferInsert;
 
 export const quizAttempts = pgTable("quizAttempts", {
-  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
   userId: text("userId")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  quizId: integer("quizId").notNull(),
+  quizId: integer("quizId")
+    .notNull()
+    .references(() => quizzes.id, { onDelete: "cascade" }),
   score: integer("score").notNull(), // Number of correct answers (0-3)
   isRevision: integer("isRevision").notNull().default(0), // 1 if revision mode, 0 if actual attempt
   completedAt: timestamp("completedAt").defaultNow().notNull(),

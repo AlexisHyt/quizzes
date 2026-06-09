@@ -1,4 +1,4 @@
-import { asc, desc, eq, lt, lte } from "drizzle-orm";
+import { and, asc, desc, eq, lt, lte } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { QuizPlayer } from "@/app/quiz/quiz-player";
@@ -6,6 +6,12 @@ import { SignOutButton } from "@/app/quiz/sign-out-button";
 import { auth } from "@/auth";
 import { db } from "@/drizzle/db";
 import { questions, quizzes } from "@/drizzle/schema";
+import {
+  getActiveOrganizationForSession,
+  getOrganizationMembership,
+  getUserOrganizations,
+  type OrganizationSession,
+} from "@/lib/organizations";
 
 function formatDateKey(date: Date): string {
   const year = date.getFullYear();
@@ -23,21 +29,31 @@ function getCurrentWeekMonday(): string {
   return formatDateKey(monday);
 }
 
-async function getCurrentQuizWithQuestions() {
+async function getCurrentQuizWithQuestions(activeOrganizationId: string) {
   const currentWeekMonday = getCurrentWeekMonday();
   const today = formatDateKey(new Date());
 
   let [quiz] = await db
     .select()
     .from(quizzes)
-    .where(eq(quizzes.date, currentWeekMonday))
+    .where(
+      and(
+        eq(quizzes.date, currentWeekMonday),
+        eq(quizzes.organizationId, activeOrganizationId),
+      ),
+    )
     .limit(1);
 
   if (!quiz) {
     [quiz] = await db
       .select()
       .from(quizzes)
-      .where(lte(quizzes.date, today))
+      .where(
+        and(
+          lte(quizzes.date, today),
+          eq(quizzes.organizationId, activeOrganizationId),
+        ),
+      )
       .orderBy(desc(quizzes.date))
       .limit(1);
   }
@@ -46,6 +62,7 @@ async function getCurrentQuizWithQuestions() {
     [quiz] = await db
       .select()
       .from(quizzes)
+      .where(eq(quizzes.organizationId, activeOrganizationId))
       .orderBy(asc(quizzes.date))
       .limit(1);
   }
@@ -66,7 +83,10 @@ async function getCurrentQuizWithQuestions() {
   };
 }
 
-async function getPastQuizzes(excludeId: number | null) {
+async function getPastQuizzes(
+  activeOrganizationId: string,
+  excludeId: number | null,
+) {
   const currentWeekMonday = getCurrentWeekMonday();
 
   const allPast = await db
@@ -77,7 +97,12 @@ async function getPastQuizzes(excludeId: number | null) {
       date: quizzes.date,
     })
     .from(quizzes)
-    .where(lt(quizzes.date, currentWeekMonday))
+    .where(
+      and(
+        lt(quizzes.date, currentWeekMonday),
+        eq(quizzes.organizationId, activeOrganizationId),
+      ),
+    )
     .orderBy(desc(quizzes.date));
 
   return allPast.filter((q) => q.id !== excludeId);
@@ -92,8 +117,41 @@ export default async function QuizPage() {
     redirect("/");
   }
 
-  const quizData = await getCurrentQuizWithQuestions();
-  const pastQuizzes = await getPastQuizzes(quizData?.quiz.id ?? null);
+  const organizationSession: OrganizationSession = {
+    session: {
+      activeOrganizationId: session.session?.activeOrganizationId ?? null,
+    },
+    user: {
+      id: session.user.id,
+      email: session.user.email,
+      name: session.user.name,
+      role: session.user.role,
+    },
+  };
+
+  const organizations = await getUserOrganizations(session.user.id);
+  const activeOrganization =
+    await getActiveOrganizationForSession(organizationSession);
+
+  if (!organizations.length) {
+    redirect("/organizations");
+  }
+
+  if (!activeOrganization) {
+    redirect("/organizations");
+  }
+
+  const quizData = await getCurrentQuizWithQuestions(activeOrganization.id);
+  const pastQuizzes = await getPastQuizzes(
+    activeOrganization.id,
+    quizData?.quiz.id ?? null,
+  );
+  const membership = await getOrganizationMembership(
+    session.user.id,
+    activeOrganization.id,
+  );
+  const canAccessAdmin =
+    !!membership && ["owner", "admin"].includes(membership.role);
 
   return (
     <div className="flex min-h-screen items-start justify-center bg-[#e7e0d8] px-6 py-16 text-[#1f3e68]">
@@ -108,6 +166,10 @@ export default async function QuizPage() {
 
         <p className="mt-4 text-lg leading-8 text-[#4b6484]">
           Tu es bien connecte avec Google ({session.user.email}).
+        </p>
+
+        <p className="mt-2 inline-flex rounded-full border border-[#d9d4cf] bg-[#efeeec] px-4 py-1 text-sm font-semibold text-[#1d3d68]">
+          Organisation active : {activeOrganization.name}
         </p>
 
         {!quizData || quizData.questions.length === 0 ? (
@@ -127,7 +189,7 @@ export default async function QuizPage() {
         )}
 
         <div className="mt-8 flex items-center gap-3">
-          {session.user.role === "admin" && (
+          {canAccessAdmin && (
             <a
               href="/admin"
               className="inline-flex h-12 items-center justify-center rounded-xl bg-[#1d3d68] px-7 text-base font-semibold text-white transition hover:bg-[#1a2d52]"
@@ -135,6 +197,12 @@ export default async function QuizPage() {
               Tableau de bord admin
             </a>
           )}
+          <a
+            href="/organizations"
+            className="inline-flex h-12 items-center justify-center rounded-xl border border-[#d9d4cf] bg-[#efeeec] px-7 text-base font-semibold text-[#1d3d68] transition hover:bg-[#e8e5e1]"
+          >
+            Organisations
+          </a>
           <SignOutButton />
         </div>
 

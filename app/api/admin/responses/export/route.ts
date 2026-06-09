@@ -1,8 +1,9 @@
-import { asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { auth } from "@/auth";
 import { db } from "@/drizzle/db";
 import {
+  member,
   questions,
   quizAttempts,
   quizzes,
@@ -30,7 +31,29 @@ export async function GET(request: Request) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (session.user.role !== "admin") {
+    const activeOrganizationId = session.session?.activeOrganizationId;
+    if (!activeOrganizationId) {
+      return Response.json(
+        { error: "No active organization" },
+        { status: 403 },
+      );
+    }
+
+    const [activeMembership] = await db
+      .select({ role: member.role })
+      .from(member)
+      .where(
+        and(
+          eq(member.userId, session.user.id),
+          eq(member.organizationId, activeOrganizationId),
+        ),
+      )
+      .limit(1);
+
+    if (
+      !activeMembership ||
+      !["owner", "admin"].includes(activeMembership.role)
+    ) {
       return Response.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -48,7 +71,12 @@ export async function GET(request: Request) {
     const [quiz] = await db
       .select()
       .from(quizzes)
-      .where(eq(quizzes.weekNumber, weekNumber));
+      .where(
+        and(
+          eq(quizzes.weekNumber, weekNumber),
+          eq(quizzes.organizationId, activeOrganizationId),
+        ),
+      );
 
     if (!quiz) {
       return Response.json({ error: "Quiz not found" }, { status: 404 });

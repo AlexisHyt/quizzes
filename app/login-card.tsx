@@ -14,7 +14,7 @@ export function LoginCard() {
 
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/quiz",
+        callbackURL: "/organizations",
       });
     } catch {
       setErrorMessage("Impossible de lancer la connexion Google. Reessaie.");

@@ -44,12 +44,18 @@ async function seedQuizzes() {
       return;
     }
 
+    // Garantir une organisation par défaut pour respecter la contrainte NOT NULL
+    await client.query(
+      "INSERT INTO organization (id, name, slug, created_at) VALUES ($1, $2, $3, NOW()) ON CONFLICT (slug) DO NOTHING",
+      ["org_default", "Organisation par defaut", "default"],
+    );
+
     // Insérer les quiz et les questions
     for (const quiz of quizzesData) {
       // Insérer le quiz
       const quizResult = await client.query(
-        'INSERT INTO quizzes ("weekNumber", "date", "label") VALUES ($1, $2, $3) RETURNING id',
-        [quiz.weekNumber, quiz.date, quiz.label],
+        'INSERT INTO quizzes ("weekNumber", "date", "label", "organization_id") VALUES ($1, $2, $3, $4) RETURNING id',
+        [quiz.weekNumber, quiz.date, quiz.label, "org_default"],
       );
 
       const quizId = quizResult.rows[0].id;

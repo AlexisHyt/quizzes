@@ -22,6 +22,34 @@
       "when": 1780956801718,
       "tag": "0002_add_attempt_id_in_responses",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1781041752800,
+      "tag": "0003_add_organisation_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1781042817707,
+      "tag": "0004_add_organisation_id_to_quizzes",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1781045277035,
+      "tag": "0005_messy_pepper_potts",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1781045965545,
+      "tag": "0006_replace_id_generated_identity",
+      "breakpoints": true
     }
   ]
 }

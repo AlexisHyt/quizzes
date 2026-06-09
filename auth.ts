@@ -1,9 +1,10 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
-import { admin } from "better-auth/plugins";
+import { admin, organization } from "better-auth/plugins";
 import { db } from "@/drizzle/db";
 import * as schema from "@/drizzle/schema";
+import { sendOrganizationInvitationEmail } from "@/lib/emails/send-organization-invitation";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -18,5 +19,21 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
   },
-  plugins: [nextCookies(), admin()],
+  plugins: [
+    nextCookies(),
+    admin(),
+    organization({
+      allowUserToCreateOrganization: true,
+      creatorRole: "owner",
+      sendInvitationEmail: async (data, request) => {
+        await sendOrganizationInvitationEmail({
+          id: data.id,
+          email: data.email,
+          role: data.role,
+          organization: data.organization,
+          request,
+        });
+      },
+    }),
+  ],
 });

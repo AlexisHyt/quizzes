@@ -1,8 +1,9 @@
-import { asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { auth } from "@/auth";
 import { db } from "@/drizzle/db";
 import {
+  member,
   questions,
   quizAttempts,
   quizzes,
@@ -22,7 +23,29 @@ export async function GET() {
     }
 
     // Vérifier le rôle admin
-    if (session.user.role !== "admin") {
+    const activeOrganizationId = session.session?.activeOrganizationId;
+    if (!activeOrganizationId) {
+      return Response.json(
+        { error: "No active organization" },
+        { status: 403 },
+      );
+    }
+
+    const [activeMembership] = await db
+      .select({ role: member.role })
+      .from(member)
+      .where(
+        and(
+          eq(member.userId, session.user.id),
+          eq(member.organizationId, activeOrganizationId),
+        ),
+      )
+      .limit(1);
+
+    if (
+      !activeMembership ||
+      !["owner", "admin"].includes(activeMembership.role)
+    ) {
       return Response.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -32,6 +55,7 @@ export async function GET() {
         attemptId: quizAttempts.id,
         userId: quizAttempts.userId,
         userName: user.name,
+        userEmail: user.email,
         quizId: quizAttempts.quizId,
         score: quizAttempts.score,
         isRevision: quizAttempts.isRevision,
@@ -43,6 +67,7 @@ export async function GET() {
       .from(quizAttempts)
       .innerJoin(user, eq(quizAttempts.userId, user.id))
       .innerJoin(quizzes, eq(quizAttempts.quizId, quizzes.id))
+      .where(eq(quizzes.organizationId, activeOrganizationId))
       .orderBy(desc(quizzes.date));
 
     // Récupérer toutes les réponses utilisateur
@@ -52,6 +77,7 @@ export async function GET() {
         attemptId: userResponses.attemptId,
         userId: userResponses.userId,
         userName: user.name,
+        userEmail: user.email,
         quizId: userResponses.quizId,
         questionId: userResponses.questionId,
         selectedAnswer: userResponses.selectedAnswer,
@@ -64,6 +90,7 @@ export async function GET() {
       .from(userResponses)
       .innerJoin(user, eq(userResponses.userId, user.id))
       .innerJoin(quizzes, eq(userResponses.quizId, quizzes.id))
+      .where(eq(quizzes.organizationId, activeOrganizationId))
       .orderBy(desc(userResponses.createdAt));
 
     const allQuestions = await db
@@ -78,6 +105,7 @@ export async function GET() {
       })
       .from(questions)
       .innerJoin(quizzes, eq(questions.quizId, quizzes.id))
+      .where(eq(quizzes.organizationId, activeOrganizationId))
       .orderBy(asc(questions.orderIndex));
 
     type AttemptWithResponses = (typeof allAttempts)[number] & {

@@ -6,6 +6,11 @@ import { SignOutButton } from "@/app/quiz/sign-out-button";
 import { auth } from "@/auth";
 import { db } from "@/drizzle/db";
 import { questions, quizzes } from "@/drizzle/schema";
+import {
+  getActiveOrganizationForSession,
+  getOrganizationMembership,
+  type OrganizationSession,
+} from "@/lib/organizations";
 
 export default async function OldQuizPage({
   params,
@@ -18,6 +23,25 @@ export default async function OldQuizPage({
 
   if (!session) {
     redirect("/");
+  }
+
+  const organizationSession: OrganizationSession = {
+    session: {
+      activeOrganizationId: session.session?.activeOrganizationId ?? null,
+    },
+    user: {
+      id: session.user.id,
+      email: session.user.email,
+      name: session.user.name,
+      role: session.user.role,
+    },
+  };
+
+  const activeOrganization =
+    await getActiveOrganizationForSession(organizationSession);
+
+  if (!activeOrganization) {
+    redirect("/organizations");
   }
 
   const { id } = await params;
@@ -37,11 +61,22 @@ export default async function OldQuizPage({
     notFound();
   }
 
+  if (quiz.organizationId !== activeOrganization.id) {
+    notFound();
+  }
+
   const quizQuestions = await db
     .select()
     .from(questions)
     .where(eq(questions.quizId, quiz.id))
     .orderBy(asc(questions.orderIndex));
+
+  const membership = await getOrganizationMembership(
+    session.user.id,
+    activeOrganization.id,
+  );
+  const canAccessAdmin =
+    !!membership && ["owner", "admin"].includes(membership.role);
 
   return (
     <div className="flex min-h-screen items-start justify-center bg-[#e7e0d8] px-6 py-16 text-[#1f3e68]">
@@ -84,7 +119,7 @@ export default async function OldQuizPage({
           >
             ← Retour aux quiz
           </a>
-          {session.user.role === "admin" && (
+          {canAccessAdmin && (
             <a
               href="/admin"
               className="inline-flex h-12 items-center justify-center rounded-xl bg-[#1d3d68] px-7 text-base font-semibold text-white transition hover:bg-[#1a2d52]"

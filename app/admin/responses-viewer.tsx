@@ -6,6 +6,7 @@ interface Attempt {
   attemptId: number;
   userId: string;
   userName: string;
+  userEmail: string;
   quizId: number;
   score: number;
   isRevision: number;
@@ -265,7 +266,10 @@ export function AdminResponsesViewer() {
                           >
                             <div>
                               <p className="font-semibold text-[#1d3d68]">
-                                Utilisateur : {attempt.userName}
+                                Utilisateur : {attempt.userName}{" "}
+                                <span className="italic text-gray-500 text-xs font-normal">
+                                  ({attempt.userEmail})
+                                </span>
                               </p>
                               <p className="text-[#4b6484]">
                                 Score: {attempt.score}/3

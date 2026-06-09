@@ -2,6 +2,11 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { AdminResponsesViewer } from "@/app/admin/responses-viewer";
 import { auth } from "@/auth";
+import {
+  getActiveOrganizationForSession,
+  getOrganizationMembership,
+  type OrganizationSession,
+} from "@/lib/organizations";
 
 export default async function AdminResponsesPage() {
   const session = await auth.api.getSession({
@@ -13,8 +18,31 @@ export default async function AdminResponsesPage() {
     redirect("/");
   }
 
-  // Rediriger si l'utilisateur n'est pas admin
-  if (session.user.role !== "admin") {
+  const organizationSession: OrganizationSession = {
+    session: {
+      activeOrganizationId: session.session?.activeOrganizationId ?? null,
+    },
+    user: {
+      id: session.user.id,
+      email: session.user.email,
+      name: session.user.name,
+      role: session.user.role,
+    },
+  };
+
+  const activeOrganization =
+    await getActiveOrganizationForSession(organizationSession);
+  if (!activeOrganization) {
+    redirect("/organizations");
+  }
+
+  const membership = await getOrganizationMembership(
+    session.user.id,
+    activeOrganization.id,
+  );
+
+  // Rediriger si l'utilisateur n'est pas admin de l'organisation active
+  if (!membership || !["owner", "admin"].includes(membership.role)) {
     redirect("/quiz");
   }
 

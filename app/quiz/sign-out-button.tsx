@@ -21,9 +21,9 @@ export function SignOutButton() {
       type="button"
       onClick={handleSignOut}
       disabled={isLoading}
-      className="inline-flex h-12 items-center justify-center rounded-xl border border-[#d9d4cf] bg-[#efeeec] px-7 text-base font-semibold text-[#1d3d68] transition hover:bg-[#e8e5e1] disabled:cursor-not-allowed disabled:opacity-70"
+      className="inline-flex h-12 items-center justify-center rounded-xl bg-red-500 px-7 text-base font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer"
     >
-      {isLoading ? "Deconnexion..." : "Se deconnecter"}
+      {isLoading ? "Deconnexion..." : "Se déconnecter"}
     </button>
   );
 }
