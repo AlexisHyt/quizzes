@@ -1,0 +1,2 @@
+ALTER TABLE "userResponses" ADD COLUMN "attemptId" integer NOT NULL;--> statement-breakpoint
+ALTER TABLE "userResponses" ADD CONSTRAINT "userResponses_attemptId_quizAttempts_id_fk" FOREIGN KEY ("attemptId") REFERENCES "public"."quizAttempts"("id") ON DELETE cascade ON UPDATE no action;

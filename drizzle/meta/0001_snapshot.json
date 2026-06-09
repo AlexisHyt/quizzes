@@ -1,6 +1,6 @@
 {
-  "id": "a96f46d5-2603-46dc-b3f8-f6ae5c8c58a8",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "633a26af-10eb-4fd7-9e1d-a871be7dd0b1",
+  "prevId": "a96f46d5-2603-46dc-b3f8-f6ae5c8c58a8",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -225,7 +225,7 @@
         },
         "userId": {
           "name": "userId",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -264,7 +264,17 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "quizAttempts_userId_user_id_fk": {
+          "name": "quizAttempts_userId_user_id_fk",
+          "tableFrom": "quizAttempts",
+          "tableTo": "user",
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -551,7 +561,7 @@
         },
         "userId": {
           "name": "userId",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -595,7 +605,17 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "userResponses_userId_user_id_fk": {
+          "name": "userResponses_userId_user_id_fk",
+          "tableFrom": "userResponses",
+          "tableTo": "user",
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},

@@ -21,6 +21,10 @@ export const user = pgTable("user", {
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
+  role: text("role"),
+  banned: boolean("banned").default(false),
+  banReason: text("ban_reason"),
+  banExpires: timestamp("ban_expires"),
 });
 
 export const session = pgTable(
@@ -38,6 +42,7 @@ export const session = pgTable(
     userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
+    impersonatedBy: text("impersonated_by"),
   },
   (table) => [index("session_userId_idx").on(table.userId)],
 );
@@ -133,7 +138,12 @@ export type InsertQuestion = typeof questions.$inferInsert;
 
 export const userResponses = pgTable("userResponses", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  userId: integer("userId").notNull(),
+  userId: text("userId")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  attemptId: integer("attemptId")
+    .notNull()
+    .references(() => quizAttempts.id, { onDelete: "cascade" }),
   quizId: integer("quizId").notNull(),
   questionId: integer("questionId").notNull(),
   selectedAnswer: integer("selectedAnswer").notNull(), // Index of selected option
@@ -147,7 +157,9 @@ export type InsertUserResponse = typeof userResponses.$inferInsert;
 
 export const quizAttempts = pgTable("quizAttempts", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  userId: integer("userId").notNull(),
+  userId: text("userId")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
   quizId: integer("quizId").notNull(),
   score: integer("score").notNull(), // Number of correct answers (0-3)
   isRevision: integer("isRevision").notNull().default(0), // 1 if revision mode, 0 if actual attempt

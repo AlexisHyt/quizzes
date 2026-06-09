@@ -6,8 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "biome check",
-    "format": "biome format --write"
+    "format:check": "biome check .",
+    "format:fix": "biome check . --write"
   },
   "dependencies": {
     "better-auth": "^1.6.15",

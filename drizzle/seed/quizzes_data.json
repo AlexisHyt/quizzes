@@ -1,0 +1,1942 @@
+[
+  {
+    "weekNumber": "S01",
+    "date": "2026-06-08",
+    "label": "8 juin 2026",
+    "questions": [
+      {
+        "text": "Un patient écrit : « votre appli a encore planté, je suis très déçu ». C'est…",
+        "options": [
+          "Un simple ticket support",
+          "Une réclamation",
+          "Une non-conformité",
+          "Rien, il n'est pas blessé"
+        ],
+        "correctAnswer": 1,
+        "explanation": "L'insatisfaction explicite suffit à qualifier une réclamation, sans besoin de récurrence (CUS-SOP-002 §2)."
+      },
+      {
+        "text": "Délai maximum pour notifier la CNIL d'une violation de données personnelles ?",
+        "options": ["24h", "48h", "72h", "7 jours"],
+        "correctAnswer": 2,
+        "explanation": "Art. 33 RGPD : 72h max. Objectif interne AppThera : décision sous 48h (ITS-SOP-003)."
+      },
+      {
+        "text": "Qui est la PRRC d'AppThera (MDR Art. 15) ?",
+        "options": ["Mikaly", "Manon", "Hélène", "Stéphane"],
+        "correctAnswer": 2,
+        "explanation": "Hélène cumule QARA et PRRC ; l'indépendance de la fonction est documentée (DD-SOP-003 §3)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S02",
+    "date": "2026-06-15",
+    "label": "15 juin 2026",
+    "questions": [
+      {
+        "text": "Avant de rendre disponible une app tierce, AppThera vérifie en tant que distributeur…",
+        "options": [
+          "Le code source",
+          "Marquage CE, déclaration de conformité et IFU",
+          "Les comptes du fabricant",
+          "Rien, c'est l'affaire du fabricant"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Obligations MDR Art. 14 : vérifications documentaires avant mise à disposition (DIS-SOP-001)."
+      },
+      {
+        "text": "Combien de temps conserve-t-on les enregistrements système du QMS (revues, audits, formations) ?",
+        "options": ["3 ans", "5 ans", "10 ans", "Pour toujours"],
+        "correctAnswer": 2,
+        "explanation": "10 ans à compter de la création de l'enregistrement (ISO 13485 §4.2.5, QMS-SOP-001 §5.3)."
+      },
+      {
+        "text": "La surveillance après commercialisation (PMS) s'applique…",
+        "options": [
+          "À toutes les apps qu'AppThera distribue",
+          "Uniquement aux DTx fabriquées par AppThera",
+          "Uniquement aux dispositifs de classe IIa et plus",
+          "C'est optionnel en classe I"
+        ],
+        "correctAnswer": 1,
+        "explanation": "La PMS est une obligation fabricant (MDR Art. 83). Comme distributeur, AppThera transmet les informations au fabricant."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S03",
+    "date": "2026-06-22",
+    "label": "22 juin 2026",
+    "questions": [
+      {
+        "text": "Une patiente demande l'effacement de ses données. Délai de réponse standard ?",
+        "options": ["72h", "2 semaines", "1 mois", "3 mois"],
+        "correctAnswer": 2,
+        "explanation": "1 mois (Art. 12.3), extensible de 2 mois si complexe. Accusé de réception DPO sous 5 jours ouvrés (ITS-SOP-002)."
+      },
+      {
+        "text": "Le processus D&D (DD-SOP-001) s'applique à…",
+        "options": [
+          "Toute activité technique d'AppThera",
+          "Uniquement aux DTx conçues par AppThera",
+          "L'intégration des apps tierces",
+          "Au site web"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Le périmètre D&D = nos propres dispositifs. L'intégration d'apps tierces relève des processus de distribution."
+      },
+      {
+        "text": "Une non-conformité déclenche-t-elle toujours une CAPA ?",
+        "options": [
+          "Oui, systématiquement",
+          "Non, décision documentée au cas par cas",
+          "Seulement si l'audit le demande",
+          "Seulement pour les NC mineures"
+        ],
+        "correctAnswer": 1,
+        "explanation": "La CAPA se justifie selon gravité et récurrence ; la décision est tracée dans le registre NC (QMS-SOP-004)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S04",
+    "date": "2026-06-29",
+    "label": "29 juin 2026",
+    "questions": [
+      {
+        "text": "Incident grave (hors décès et menace de santé publique) : délai max de déclaration à l'ANSM ?",
+        "options": ["2 jours", "10 jours", "15 jours", "30 jours"],
+        "correctAnswer": 2,
+        "explanation": "MDR Art. 87(3) : immédiatement, au plus tard 15 jours dès la prise de connaissance (CLI-SOP-002)."
+      },
+      {
+        "text": "Une allégation produit (« réduit l'anxiété de 40% ») peut être utilisée si…",
+        "options": [
+          "Le commercial y croit",
+          "Elle figure dans la Claims Library validée",
+          "Un concurrent le dit aussi",
+          "Elle est formulée au conditionnel"
+        ],
+        "correctAnswer": 1,
+        "explanation": "MDR Art. 7 interdit les allégations trompeuses ; toute claim passe par la Claims Library (MAR-SOP-001)."
+      },
+      {
+        "text": "Tu suspectes un phishing réussi sur ton poste. Qui contacter en premier ?",
+        "options": ["Hélène", "Mikaly", "Manon", "Le support de l'app"],
+        "correctAnswer": 1,
+        "explanation": "Mikaly (CTO) pilote la réponse aux incidents techniques (ITS-SOP-004) ; la DPO est impliquée si données perso."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S05",
+    "date": "2026-07-06",
+    "label": "6 juillet 2026",
+    "questions": [
+      {
+        "text": "Qui rend un document contrôlé effectif ?",
+        "options": [
+          "N'importe qui de l'équipe",
+          "L'auteur seul",
+          "L'approbateur désigné, après revue",
+          "Le client"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Cycle auteur → relecteur → approbateur, tracé dans la Master List (QMS-SOP-001)."
+      },
+      {
+        "text": "Une réclamation Major doit être transmise au fabricant sous…",
+        "options": ["1 jour ouvré", "3 jours ouvrés", "1 semaine", "1 mois"],
+        "correctAnswer": 0,
+        "explanation": "Major/Critical : 1 jour ouvré ; autres sévérités : 3 jours ouvrés (CUS-SOP-002 §5)."
+      },
+      {
+        "text": "Sur une question RGPD, l'avis de qui prévaut ?",
+        "options": ["QARA", "DPO", "CTO", "Co-CEO"],
+        "correctAnswer": 1,
+        "explanation": "La position de la DPO prévaut sur les sujets RGPD (ITS-REG-002, gestion du double rôle de Manon)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S06",
+    "date": "2026-07-13",
+    "label": "13 juillet 2026",
+    "questions": [
+      {
+        "text": "Nos DTx sont en classe de sécurité logicielle IEC 62304…",
+        "options": ["Classe A", "Classe B", "Classe C", "Non applicable"],
+        "correctAnswer": 0,
+        "explanation": "Classe A : aucune blessure possible en cas de défaillance du logiciel (Classification Record)."
+      },
+      {
+        "text": "Le registre des traitements (RoPA) sert à…",
+        "options": [
+          "Lister les fournisseurs",
+          "Documenter chaque traitement de données personnelles",
+          "Suivre les bugs",
+          "Archiver les contrats"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Art. 30 RGPD : chaque activité de traitement y est décrite avec base légale, durées, mesures (ITS-REG-001)."
+      },
+      {
+        "text": "La revue de direction a lieu…",
+        "options": [
+          "Chaque mois",
+          "Chaque trimestre",
+          "Une fois par an",
+          "Uniquement avant un audit"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Une fois par an, par défaut au T1 de l'année suivante (QMS-SOP-002 §4.1)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S07",
+    "date": "2026-07-20",
+    "label": "20 juillet 2026",
+    "questions": [
+      {
+        "text": "Un même email patient peut être à la fois ticket support, réclamation et non-conformité.",
+        "options": [
+          "Vrai",
+          "Faux",
+          "Seulement si c'est grave",
+          "Seulement pour nos DTx"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Ce sont des catégories distinctes qui peuvent coexister — pas des niveaux d'escalade (CUS-SOP-002)."
+      },
+      {
+        "text": "AppThera tient un registre des réclamations transmises aux fabricants parce que…",
+        "options": [
+          "C'est pratique",
+          "C'est une obligation distributeur (MDR Art. 14(5))",
+          "Le fabricant l'exige",
+          "C'est pour la compta"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Le distributeur tient un registre des réclamations et informe le fabricant (CUS-REG-001)."
+      },
+      {
+        "text": "Le MFA (double authentification) est requis…",
+        "options": [
+          "Pour Mikaly seulement",
+          "Sur les outils critiques, pour tout le monde",
+          "C'est optionnel",
+          "Uniquement en télétravail"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Mesure de sécurité de base définie par la politique IT (ITS-POL-001, ITS-POL-002)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S08",
+    "date": "2026-07-27",
+    "label": "27 juillet 2026",
+    "questions": [
+      {
+        "text": "Qui réalise l'évaluation de déclarabilité d'un incident (MDR Art. 87) ?",
+        "options": ["Le support", "La QARA", "Le fabricant tiers", "L'ANSM"],
+        "correctAnswer": 1,
+        "explanation": "La QARA est propriétaire du processus vigilance et prépare les soumissions (CLI-SOP-002)."
+      },
+      {
+        "text": "Avant d'utiliser un nouvel outil logiciel dans le QMS, il faut…",
+        "options": [
+          "Rien de particulier",
+          "Une validation proportionnée au risque",
+          "Un audit externe",
+          "L'accord de l'ANSM"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Validation risk-based des logiciels supportant le QMS (QMS-SOP-008), enregistrée dans QMS-REG-006."
+      },
+      {
+        "text": "Qui gère la sécurité des endpoints (postes, anti-malware, IAM) ?",
+        "options": ["Hélène", "Manon", "Mikaly", "Alice"],
+        "correctAnswer": 2,
+        "explanation": "Mikaly assure la sécurité opérationnelle et l'infra SaaS (rôle RSSI de fait)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S09",
+    "date": "2026-08-03",
+    "label": "3 août 2026",
+    "questions": [
+      {
+        "text": "Perte d'un téléphone pro contenant des emails patients. Premier réflexe ?",
+        "options": [
+          "Attendre de voir",
+          "Le signaler immédiatement (Mikaly + DPO)",
+          "Acheter un nouveau téléphone",
+          "Changer juste le mot de passe"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Violation potentielle : signalement immédiat — la fenêtre des 72h court dès la prise de conscience (ITS-SOP-003)."
+      },
+      {
+        "text": "Le matériel promotionnel est tracé dans…",
+        "options": [
+          "La Claims Library",
+          "Le Promotional Material Register",
+          "Le CRM",
+          "Slack"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Chaque support promo est enregistré et revu avant diffusion (MAR-SOP-001)."
+      },
+      {
+        "text": "Un changement sur une DTx en production passe d'abord par…",
+        "options": [
+          "Un déploiement direct",
+          "Une évaluation d'impact documentée",
+          "Un email à l'équipe",
+          "Une mise à jour de l'IFU"
+        ],
+        "correctAnswer": 1,
+        "explanation": "DD-FRM-003 : impact sur risques, V&V et documentation technique évalué avant implémentation."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S10",
+    "date": "2026-08-10",
+    "label": "10 août 2026",
+    "questions": [
+      {
+        "text": "La formation au QMS est tracée dans…",
+        "options": [
+          "Slack",
+          "QMS-REG-003 (Training Records)",
+          "Le drive",
+          "Nulle part"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Preuve de compétence ISO 13485 §6.2 — ces quizz y contribuent !"
+      },
+      {
+        "text": "Le chrono des SLA réclamation démarre…",
+        "options": [
+          "À la revue par le COO",
+          "Dès la prise de connaissance par AppThera",
+          "À l'ouverture du ticket",
+          "Le lundi suivant"
+        ],
+        "correctAnswer": 1,
+        "explanation": "L'« awareness » d'AppThera lance le chrono — y compris pour la vigilance (CUS-SOP-002 §4)."
+      },
+      {
+        "text": "La base légale d'un traitement de données doit être identifiée…",
+        "options": [
+          "Après une plainte",
+          "Avant de commencer le traitement",
+          "Lors de l'audit",
+          "Jamais"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Chaque traitement du RoPA a sa base légale Art. 6 définie en amont (ITS-SOP-001)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S11",
+    "date": "2026-08-17",
+    "label": "17 août 2026",
+    "questions": [
+      {
+        "text": "Une app tierce arrive avec une IFU uniquement en anglais. On fait quoi ?",
+        "options": [
+          "On distribue quand même",
+          "On bloque et on remonte au fabricant",
+          "On traduit nous-mêmes",
+          "On retire l'IFU"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Le distributeur vérifie la conformité des informations fournies (dont la langue) avant mise à disposition (Art. 14)."
+      },
+      {
+        "text": "Un fournisseur critique est évalué…",
+        "options": [
+          "Jamais",
+          "À la sélection, puis périodiquement",
+          "Uniquement à la sélection",
+          "Quand il y a un problème"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Évaluation initiale + réévaluation selon criticité (QMS-SOP-006, QMS-REG-004)."
+      },
+      {
+        "text": "L'évaluation clinique est requise pour nos DTx…",
+        "options": [
+          "Non, la classe I est exemptée",
+          "Oui, même en classe I",
+          "Seulement si l'ANSM le demande",
+          "Uniquement au lancement"
+        ],
+        "correctAnswer": 1,
+        "explanation": "MDR Art. 61 : évaluation clinique pour tous les dispositifs, proportionnée au risque (CLI-SOP-003)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S12",
+    "date": "2026-08-24",
+    "label": "24 août 2026",
+    "questions": [
+      {
+        "text": "Un sous-traitant (processeur) qui subit une violation de données doit…",
+        "options": [
+          "Gérer seul",
+          "Notifier AppThera sans délai indu",
+          "Notifier la CNIL directement",
+          "Attendre la fin de son enquête"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Obligation du DPA ; AppThera, responsable de traitement, garde la main sur la notification CNIL (ITS-SOP-003)."
+      },
+      {
+        "text": "En tant que distributeur, AppThera doit…",
+        "options": [
+          "Faire la PMS des apps tierces",
+          "Coopérer et transmettre les réclamations au fabricant",
+          "Émettre les déclarations de conformité",
+          "Déclarer les incidents à la place du fabricant"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Art. 14 : devoirs ciblés (vérifications, registre, transmission, coopération). La PMS reste au fabricant."
+      },
+      {
+        "text": "Qui peut modifier un document QMS effectif dans Notion ?",
+        "options": [
+          "Toute l'équipe",
+          "Hélène — les autres sont en lecture/commentaire",
+          "Personne",
+          "Manon seule"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Contrôle d'accès par permissions + historique de versions Notion = traçabilité défendable en audit."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S13",
+    "date": "2026-08-31",
+    "label": "31 août 2026",
+    "questions": [
+      {
+        "text": "Menace grave pour la santé publique : déclaration à l'ANSM sous…",
+        "options": ["2 jours", "10 jours", "15 jours", "30 jours"],
+        "correctAnswer": 0,
+        "explanation": "MDR Art. 87(4) : immédiatement, au plus tard 2 jours (CLI-SOP-002)."
+      },
+      {
+        "text": "Le DHF (Design History File) contient…",
+        "options": [
+          "Les factures",
+          "Les livrables de conception du dispositif",
+          "Les CV de l'équipe",
+          "Les contrats clients"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Toutes les preuves D&D : plan, revues, V&V, transfert (DD-TPL-002)."
+      },
+      {
+        "text": "Les sauvegardes IT sont pilotées par…",
+        "options": ["Hélène", "Manon", "Mikaly", "Chacun pour soi"],
+        "correctAnswer": 2,
+        "explanation": "Continuité et backups sous responsabilité du CTO (ITS-SOP-005)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S14",
+    "date": "2026-09-07",
+    "label": "7 septembre 2026",
+    "questions": [
+      {
+        "text": "Que signifie « CAPA » ?",
+        "options": [
+          "Contrôle A Posteriori Annuel",
+          "Action Corrective / Action Préventive",
+          "Certificat d'Aptitude Professionnelle",
+          "Plan d'Action Annuel"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Corrective = traite la cause d'une NC réelle ; préventive = NC potentielle (QMS-SOP-004)."
+      },
+      {
+        "text": "Réclamation triviale (ex. FAQ introuvable) : réponse au patient sous…",
+        "options": [
+          "Pas de réponse requise",
+          "5 jours ouvrés",
+          "24h",
+          "15 jours"
+        ],
+        "correctAnswer": 1,
+        "explanation": "SLA de réponse de 5 jours ouvrés, même pour le trivial (CUS-SOP-002 §4)."
+      },
+      {
+        "text": "Une demande d'accès RGPD arrive : accusé de réception sous…",
+        "options": ["5 jours ouvrés", "1 mois", "48h", "Pas obligatoire"],
+        "correctAnswer": 0,
+        "explanation": "Accusé de réception DPO sous 5 jours ouvrés, avec ID, droit exercé et délai applicable (ITS-SOP-002)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S15",
+    "date": "2026-09-14",
+    "label": "14 septembre 2026",
+    "questions": [
+      {
+        "text": "Combien de design reviews jalonnent un projet DTx ?",
+        "options": ["1", "2", "3", "Aucune"],
+        "correctAnswer": 2,
+        "explanation": "DR-1, DR-2, DR-3 aux jalons clés du projet (DD-SOP-001, DD-FRM-001)."
+      },
+      {
+        "text": "L'audit interne est réalisé par…",
+        "options": [
+          "Hélène",
+          "Un auditeur indépendant de l'activité auditée",
+          "Alexis",
+          "L'ANSM"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Indépendance requise vis-à-vis de l'activité auditée — d'où le recours à Manon, externe (QMS-SOP-003)."
+      },
+      {
+        "text": "« Cette app guérit la dépression » : quel est le problème ?",
+        "options": [
+          "Aucun",
+          "Allégation au-delà de la destination = interdite",
+          "OK si on y croit",
+          "OK sur les réseaux sociaux uniquement"
+        ],
+        "correctAnswer": 1,
+        "explanation": "MDR Art. 7 : pas d'attribution de fonctions ou propriétés que le dispositif n'a pas."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S16",
+    "date": "2026-09-21",
+    "label": "21 septembre 2026",
+    "questions": [
+      {
+        "text": "La décision de notifier la CNIL après une violation est prise par…",
+        "options": [
+          "Manon seule",
+          "DPO + au moins un Co-CEO",
+          "Mikaly",
+          "Le sous-traitant"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Décision conjointe DPO + Co-CEO, objectif interne 48h (ITS-SOP-003)."
+      },
+      {
+        "text": "Le suivi des vulnérabilités SOUP (dépendances logicielles) passe par…",
+        "options": [
+          "Une veille manuelle",
+          "Dependabot",
+          "Un pentest annuel",
+          "Rien"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Dependabot scanne les dépendances ; cette veille alimente la PMS (CLI-SOP-001)."
+      },
+      {
+        "text": "Un document QMS passe de Draft à Effective quand…",
+        "options": [
+          "L'auteur a fini",
+          "Après revue et approbation tracées",
+          "Après 30 jours",
+          "Quand on commence à l'utiliser"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Statut piloté dans la Master List avec dates et signataires (QMS-SOP-001)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S17",
+    "date": "2026-09-28",
+    "label": "28 septembre 2026",
+    "questions": [
+      {
+        "text": "Un patient signale une hospitalisation possiblement liée à une app. Premier geste ?",
+        "options": [
+          "Attendre confirmation médicale",
+          "Flag immédiat à la QARA",
+          "Répondre au patient sous 5 jours",
+          "Fermer le ticket"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Incident grave potentiel : flag QARA sans délai, au plus tard 24h (CUS-SOP-002 §6)."
+      },
+      {
+        "text": "Le double rôle QARA externe + DPO de Manon est encadré par…",
+        "options": [
+          "Rien",
+          "ITS-REG-002 (analyse de conflit d'intérêts)",
+          "Son contrat seul",
+          "C'est interdit par le RGPD"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Mémo d'analyse du conflit d'intérêts ; la position DPO prévaut sur les sujets RGPD."
+      },
+      {
+        "text": "Le transfert de conception (design transfer) vérifie que…",
+        "options": [
+          "Le produit est joli",
+          "La production reflète la conception validée",
+          "Le marketing est prêt",
+          "Les ventes décollent"
+        ],
+        "correctAnswer": 1,
+        "explanation": "DD-FRM-002 : passage maîtrisé de la conception validée à la mise sur le marché."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S18",
+    "date": "2026-10-05",
+    "label": "5 octobre 2026",
+    "questions": [
+      {
+        "text": "Une OFI (opportunité d'amélioration) relevée en audit…",
+        "options": [
+          "Exige une CAPA immédiate",
+          "Est traitée de façon proportionnée, sans obligation de CAPA",
+          "Est ignorée",
+          "Bloque la certification"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Réponse proportionnée au niveau du constat — une OFI n'exige pas de CAPA (QMS-SOP-003/004)."
+      },
+      {
+        "text": "Une DPIA (analyse d'impact) est requise quand…",
+        "options": [
+          "Toujours",
+          "Le traitement présente un risque élevé pour les personnes",
+          "Jamais pour un dispositif classe I",
+          "Le client le demande"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Art. 35 RGPD ; le besoin de DPIA est évalué traitement par traitement dans le RoPA."
+      },
+      {
+        "text": "Avant le lancement de la distribution d'une nouvelle app, on documente…",
+        "options": [
+          "Rien",
+          "Un rapport de lancement (vérifications + tests d'intégration)",
+          "Juste un email",
+          "Une facture"
+        ],
+        "correctAnswer": 1,
+        "explanation": "DIS-TPL-001/002 tracent les vérifications Art. 14 et tests d'intégration avant mise à disposition."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S19",
+    "date": "2026-10-12",
+    "label": "12 octobre 2026",
+    "questions": [
+      {
+        "text": "Décès potentiellement lié à un dispositif : déclaration à l'ANSM sous…",
+        "options": ["2 jours", "10 jours", "15 jours", "1 mois"],
+        "correctAnswer": 1,
+        "explanation": "MDR Art. 87(3) : immédiatement, au plus tard 10 jours (CLI-SOP-002)."
+      },
+      {
+        "text": "La Documents Master List sert à…",
+        "options": [
+          "Lister les employés",
+          "Piloter ID, version, statut et dates des documents QMS",
+          "Suivre les ventes",
+          "Archiver les emails"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Les métadonnées (ID, version, statut, dates) vivent dans la Master List, pas dans le corps des documents."
+      },
+      {
+        "text": "Mots de passe : la bonne pratique AppThera, c'est…",
+        "options": [
+          "Le même partout",
+          "Gestionnaire de mots de passe + MFA",
+          "Post-it sous le clavier",
+          "Prénom + année de naissance"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Règles d'hygiène numérique définies dans la charte IT (ITS-POL-002)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S20",
+    "date": "2026-10-19",
+    "label": "19 octobre 2026",
+    "questions": [
+      {
+        "text": "La matrice de traçabilité relie…",
+        "options": [
+          "Budget et planning",
+          "Besoins utilisateurs, exigences et tests",
+          "Clients et factures",
+          "Bugs et tickets"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Chaque besoin utilisateur est couvert par une exigence testée (Traceability Matrix du DHF)."
+      },
+      {
+        "text": "Qui signe la clôture des réclamations sensibles ?",
+        "options": ["Alice", "La QARA", "Le patient", "Personne"],
+        "correctAnswer": 1,
+        "explanation": "QARA sign-off requis selon la criticité (CUS-SOP-002, champ dédié du CUS-REG-001)."
+      },
+      {
+        "text": "Stéphane est…",
+        "options": ["CTO", "Co-CEO", "DPO", "Support"],
+        "correctAnswer": 1,
+        "explanation": "Co-CEO avec Hélène ; il co-signe notamment les soumissions de vigilance."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S21",
+    "date": "2026-10-26",
+    "label": "26 octobre 2026",
+    "questions": [
+      {
+        "text": "Combien de temps garde-t-on les données patients ?",
+        "options": [
+          "Pour toujours",
+          "Selon la durée définie au RoPA pour ce traitement",
+          "1 an, point",
+          "Jusqu'à la fin du contrat seulement"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Limitation de conservation : durée définie par traitement au RoPA (ITS-SOP-001)."
+      },
+      {
+        "text": "Un risque « système » (ex. dépendance à une personne clé) est suivi dans…",
+        "options": [
+          "L'analyse de risques produit ISO 14971",
+          "QMS-REG-005 (System Risk Register)",
+          "Le CRM",
+          "Nulle part"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Risques d'entreprise/QMS, distincts des risques produit ISO 14971 (QMS-SOP-007)."
+      },
+      {
+        "text": "Avant publication, un post LinkedIn mentionnant nos DTx doit…",
+        "options": [
+          "Être validé selon MAR-SOP-001",
+          "Partir vite avant la concurrence",
+          "Être en anglais",
+          "Citer un concurrent"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Revue du contenu promo + claims conformes à la Claims Library (MAR-SOP-001)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S22",
+    "date": "2026-11-02",
+    "label": "2 novembre 2026",
+    "questions": [
+      {
+        "text": "L'efficacité d'une CAPA est…",
+        "options": [
+          "Supposée acquise",
+          "Vérifiée et documentée avant clôture",
+          "Optionnelle",
+          "Vérifiée par l'ANSM"
+        ],
+        "correctAnswer": 1,
+        "explanation": "La vérification d'efficacité est une étape de clôture documentée (QMS-SOP-004, QMS-REG-002)."
+      },
+      {
+        "text": "Le PMS Plan est établi…",
+        "options": [
+          "Pour l'entreprise globalement",
+          "Par dispositif",
+          "Par client",
+          "Par trimestre"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Un plan PMS par DTx (CLI-TPL-001), avec rapport périodique (CLI-TPL-002)."
+      },
+      {
+        "text": "Un journaliste appelle et demande des infos sur un patient. Réflexe ?",
+        "options": [
+          "Répondre poliment",
+          "Refuser et rediriger vers la DPO",
+          "Confirmer juste le nom",
+          "Demander à Alice de gérer"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Aucune divulgation : toute demande externe sur des données personnelles passe par la DPO."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S23",
+    "date": "2026-11-09",
+    "label": "9 novembre 2026",
+    "questions": [
+      {
+        "text": "Un bug critique découvert en production sur notre DTx déclenche…",
+        "options": [
+          "Un patch silencieux",
+          "NC + analyse d'impact (risques, V&V) avant correctif",
+          "Un simple ticket",
+          "Une réunion le mois prochain"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Maîtrise des changements et des NC produit : analyse avant correctif (DD-FRM-003, QMS-SOP-004)."
+      },
+      {
+        "text": "Le périmètre D&D couvre-t-il l'intégration des apps tierces ?",
+        "options": [
+          "Oui",
+          "Non, c'est la distribution",
+          "Ça dépend de l'app",
+          "Si le fabricant le demande"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Le D&D couvre nos DTx uniquement ; l'intégration d'apps tierces relève de la distribution."
+      },
+      {
+        "text": "Le programme d'audit est défini…",
+        "options": [
+          "Au fil de l'eau",
+          "Annuellement",
+          "Tous les 5 ans",
+          "Par l'ANSM"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Programme annuel défini et approuvé par la QARA (QMS-SOP-003, QMS-TPL-004)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S24",
+    "date": "2026-11-16",
+    "label": "16 novembre 2026",
+    "questions": [
+      {
+        "text": "Délai interne AppThera pour décider de notifier la CNIL ?",
+        "options": ["24h", "48h", "72h", "1 semaine"],
+        "correctAnswer": 1,
+        "explanation": "48h interne = marge de 24h avant le maximum réglementaire de 72h (ITS-SOP-003)."
+      },
+      {
+        "text": "« Support », « réclamation », « NC » sont…",
+        "options": [
+          "Des synonymes",
+          "Des niveaux d'escalade",
+          "Des catégories distinctes pouvant coexister",
+          "Des statuts Notion"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Un même message peut relever des trois à la fois (CUS-SOP-002)."
+      },
+      {
+        "text": "Qui co-signe les déclarations de vigilance à l'ANSM ?",
+        "options": [
+          "La QARA seule",
+          "QARA + un Co-CEO",
+          "La DPO",
+          "Le fabricant tiers"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Co-signature Co-CEO en tant que représentant légal (CLI-SOP-002)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S25",
+    "date": "2026-11-23",
+    "label": "23 novembre 2026",
+    "questions": [
+      {
+        "text": "Pourquoi ne pas mettre ID/version/statut dans le corps des documents ?",
+        "options": [
+          "Question d'esthétique",
+          "Ces métadonnées vivent dans la Master List (source unique)",
+          "Notion l'interdit",
+          "C'est confidentiel"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Une seule source de vérité évite les incohérences entre corps de document et registre (QMS-SOP-001)."
+      },
+      {
+        "text": "Si la causalité d'un incident grave est incertaine à l'échéance de déclaration…",
+        "options": [
+          "On attend d'être sûr",
+          "On déclare avec les infos disponibles, puis on complète",
+          "On annule",
+          "On demande au patient"
+        ],
+        "correctAnswer": 1,
+        "explanation": "MDR Art. 87(7) : déclarer avec les infos disponibles, puis rapports de suivi (CLI-SOP-002)."
+      },
+      {
+        "text": "Installer un logiciel non approuvé sur son poste pro, c'est…",
+        "options": [
+          "OK si c'est gratuit",
+          "Contraire à la charte IT",
+          "OK le week-end",
+          "Recommandé"
+        ],
+        "correctAnswer": 1,
+        "explanation": "La charte IT encadre les installations — risque sécurité et licences (ITS-POL-002)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S26",
+    "date": "2026-11-30",
+    "label": "30 novembre 2026",
+    "questions": [
+      {
+        "text": "La GSPR Checklist (Annexe I MDR) démontre…",
+        "options": [
+          "La rentabilité",
+          "La conformité aux exigences générales de sécurité et performance",
+          "La satisfaction client",
+          "Le design UX"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Pièce maîtresse de la documentation technique MDR (Annexes I et II)."
+      },
+      {
+        "text": "La Claims Library contient…",
+        "options": [
+          "Les plaintes clients",
+          "Les allégations validées utilisables en promotion",
+          "Les logos",
+          "Les tarifs"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Source unique des allégations autorisées, reliées à leurs preuves (MAR-SOP-001)."
+      },
+      {
+        "text": "Les inputs de la revue de direction sont consolidés…",
+        "options": [
+          "Le jour J",
+          "Au moins 2 semaines avant",
+          "Après la réunion",
+          "Par l'ANSM"
+        ],
+        "correctAnswer": 1,
+        "explanation": "La QARA consolide les entrées au moins 2 semaines avant la réunion (QMS-SOP-002)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S27",
+    "date": "2026-12-07",
+    "label": "7 décembre 2026",
+    "questions": [
+      {
+        "text": "L'insatisfaction explicite d'un patient, sans récurrence du problème…",
+        "options": [
+          "N'est pas une réclamation",
+          "Est une réclamation",
+          "Est une non-conformité",
+          "Est un incident grave"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Pas besoin de récurrence : l'insatisfaction exprimée suffit à qualifier la réclamation (CUS-SOP-002 §2)."
+      },
+      {
+        "text": "Les droits RGPD des personnes incluent…",
+        "options": [
+          "Accès, rectification, effacement, portabilité",
+          "Seulement l'accès",
+          "Seulement l'effacement",
+          "Le droit au crédit"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Droits des personnes gérés via ITS-SOP-002 et tracés dans le registre ITS-REG-003."
+      },
+      {
+        "text": "Qui est relecteur (reviewer) obligatoire des documents contrôlés ?",
+        "options": ["Alexis", "Manon", "Mathilde", "Personne"],
+        "correctAnswer": 1,
+        "explanation": "Manon (QARA externe) est relectrice obligatoire des documents contrôlés avant approbation."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S28",
+    "date": "2026-12-14",
+    "label": "14 décembre 2026",
+    "questions": [
+      {
+        "text": "Les données PMS alimentent…",
+        "options": [
+          "Rien de particulier",
+          "La gestion des risques et l'évaluation clinique",
+          "Le marketing uniquement",
+          "La comptabilité"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Boucle fermée : les données PMS alimentent la gestion des risques (ISO 14971) et l'évaluation clinique (CLI-SOP-001)."
+      },
+      {
+        "text": "La PRRC vérifie notamment…",
+        "options": [
+          "Les salaires",
+          "La conformité des dispositifs avant libération et les obligations PMS/vigilance",
+          "Le code",
+          "Les contrats clients"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Missions MDR Art. 15 ; indépendance de la fonction documentée (DD-SOP-003 §3)."
+      },
+      {
+        "text": "Un export de données patients vers un prestataire hors UE nécessite…",
+        "options": [
+          "Rien",
+          "Un transfert encadré par des garanties appropriées (Art. 46)",
+          "Un simple email",
+          "L'accord du patient uniquement"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Transferts internationaux tracés au RoPA avec garanties appropriées (Art. 46 : clauses types, etc.)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S29",
+    "date": "2026-12-21",
+    "label": "21 décembre 2026",
+    "questions": [
+      {
+        "text": "Une modification, même mineure, d'un SOP effectif…",
+        "options": [
+          "Se fait directement dans le texte",
+          "Suit le même cycle revue/approbation avec nouvelle version",
+          "Se note dans Slack",
+          "Attend le prochain audit"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Tout changement d'un document effectif est maîtrisé, revu et versionné (QMS-SOP-001)."
+      },
+      {
+        "text": "Les exigences logicielles (SRS) doivent être…",
+        "options": [
+          "Vagues pour rester flexibles",
+          "Testables et tracées vers les besoins",
+          "Secrètes",
+          "Rédigées en français uniquement"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Chaque exigence est vérifiable et reliée aux besoins dans la matrice de traçabilité."
+      },
+      {
+        "text": "Avant de transmettre une réclamation au fabricant, les données du plaignant sont…",
+        "options": [
+          "Envoyées telles quelles",
+          "Anonymisées ou transmises avec consentement",
+          "Supprimées",
+          "Publiées"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Minimisation RGPD lors de la transmission au fabricant (CUS-SOP-002 §5)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S30",
+    "date": "2026-12-28",
+    "label": "28 décembre 2026",
+    "questions": [
+      {
+        "text": "Tu reçois une « carte cadeau, cliquez ici » d'un expéditeur inconnu. Tu…",
+        "options": [
+          "Cliques vite avant l'expiration",
+          "Signales à Mikaly sans cliquer",
+          "Transfères à l'équipe",
+          "Réponds merci"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Réflexe anti-phishing : ne pas cliquer, signaler à Mikaly (ITS-POL-002). Les fêtes sont une période à risque !"
+      },
+      {
+        "text": "Les enregistrements liés à un dispositif (réclamations, vigilance, D&D) sont conservés…",
+        "options": [
+          "5 ans",
+          "Au moins la vie du dispositif, min. 10 ans après dernière mise sur le marché",
+          "1 an",
+          "6 mois"
+        ],
+        "correctAnswer": 1,
+        "explanation": "MDR Art. 10§8 : au moins la vie du dispositif, minimum 10 ans après dernière mise sur le marché (QMS-SOP-001 §5.3)."
+      },
+      {
+        "text": "Mathilde intervient principalement sur…",
+        "options": [
+          "Le développement",
+          "Ventes / Marketing / Support",
+          "La sécurité IT",
+          "La vigilance"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Connaître les rôles aide à router vite chaque sujet au bon endroit."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S31",
+    "date": "2027-01-04",
+    "label": "4 janvier 2027",
+    "questions": [
+      {
+        "text": "La revue de direction couvrant 2026 a lieu…",
+        "options": ["En décembre 2026", "Au T1 2027", "En été 2027", "Jamais"],
+        "correctAnswer": 1,
+        "explanation": "Bonne année ! MR annuelle au T1 de l'année suivante, couvrant l'année écoulée (QMS-SOP-002 §4.1)."
+      },
+      {
+        "text": "Le CER (Clinical Evaluation Report) est…",
+        "options": [
+          "Un document marketing",
+          "La synthèse des preuves cliniques du dispositif",
+          "Un rapport financier",
+          "Optionnel pour nos DTx"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Conclusion documentée de l'évaluation clinique du dispositif (CLI-SOP-003, CLI-TPL-004)."
+      },
+      {
+        "text": "Qui tient le registre des violations de données ?",
+        "options": ["Mikaly", "La DPO", "Alice", "Le sous-traitant"],
+        "correctAnswer": 1,
+        "explanation": "ITS-REG-004, tenu par la DPO — même les violations non notifiées y figurent."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S32",
+    "date": "2027-01-11",
+    "label": "11 janvier 2027",
+    "questions": [
+      {
+        "text": "Avant la mise sur le marché d'une DTx, on vérifie la complétude de…",
+        "options": [
+          "La documentation technique (Annexe II) et la déclaration de conformité",
+          "Du site web",
+          "Des CGV",
+          "Du pitch deck"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Libération maîtrisée : documentation technique Annexe II complète + déclaration de conformité (DD-SOP-003)."
+      },
+      {
+        "text": "Une réclamation Critical (menace vitale) est transmise au fabricant sous…",
+        "options": ["1 jour ouvré", "3 jours ouvrés", "1 semaine", "15 jours"],
+        "correctAnswer": 0,
+        "explanation": "Major/Critical : transmission au fabricant sous 1 jour ouvré (CUS-SOP-002 §5)."
+      },
+      {
+        "text": "Le questionnaire qualité fournisseur (QMS-FRM-002) sert à…",
+        "options": [
+          "Évaluer la solidité QMS d'un fournisseur",
+          "Négocier les prix",
+          "Recruter",
+          "Auditer l'ANSM"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Le questionnaire qualité fournisseur est une entrée de l'évaluation (QMS-SOP-006)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S33",
+    "date": "2027-01-18",
+    "label": "18 janvier 2027",
+    "questions": [
+      {
+        "text": "Une demande de droit RGPD complexe peut être étendue…",
+        "options": [
+          "De 2 mois, en informant la personne dans le 1er mois",
+          "Indéfiniment",
+          "De 6 mois",
+          "Jamais"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Art. 12.3 : 1 mois + 2 mois max si complexe, en informant la personne dans le 1er mois (ITS-SOP-002)."
+      },
+      {
+        "text": "Qui valide les claims avant leur entrée en Claims Library ?",
+        "options": [
+          "Mathilde seule",
+          "Revue avec la QARA",
+          "Le client",
+          "Personne"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Validation croisée contenu / justification clinico-réglementaire avant entrée en Claims Library (MAR-SOP-001)."
+      },
+      {
+        "text": "Le suivi des tendances (trending) des réclamations sert à…",
+        "options": [
+          "Faire de jolies stats",
+          "Détecter des signaux de sécurité ou de performance",
+          "Évaluer Alice",
+          "Rien"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Le trending PMS peut déclencher analyse de risque, NC ou vigilance (CLI-SOP-001)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S34",
+    "date": "2027-01-25",
+    "label": "25 janvier 2027",
+    "questions": [
+      {
+        "text": "Un constat d'audit Major signifie…",
+        "options": [
+          "Tout va bien",
+          "Une défaillance significative du système exigeant correction",
+          "Une préférence de l'auditeur",
+          "Une amende"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Gradation des constats et réponses proportionnées (QMS-SOP-003)."
+      },
+      {
+        "text": "Événement mixte (cyber + données perso) : qui pilote quoi ?",
+        "options": [
+          "Mikaly gère tout",
+          "CTO pilote le volet technique, DPO le volet données personnelles",
+          "Personne",
+          "Hélène seule"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Logique de pont entre ITS-SOP-004 (CTO, volet technique) et ITS-SOP-003 (DPO, volet données perso)."
+      },
+      {
+        "text": "Un SOUP, c'est…",
+        "options": [
+          "Un plat",
+          "Un composant logiciel tiers non développé pour le dispositif",
+          "Un type de bug",
+          "Un serveur"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Software Of Unknown Provenance (IEC 62304) — surveillé via Dependabot."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S35",
+    "date": "2027-02-01",
+    "label": "1 février 2027",
+    "questions": [
+      {
+        "text": "La délivrance d'une DTx prescrite au patient suit…",
+        "options": [
+          "Aucune procédure",
+          "CUS-SOP-001",
+          "DD-SOP-001",
+          "MAR-SOP-001"
+        ],
+        "correctAnswer": 1,
+        "explanation": "CUS-SOP-001 (Patient Delivery & Customer Support) encadre l'activation et l'accompagnement."
+      },
+      {
+        "text": "Le principe de minimisation veut que…",
+        "options": [
+          "On collecte tout au cas où",
+          "On ne collecte que le nécessaire à la finalité",
+          "On supprime tout",
+          "On anonymise tout"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Art. 5 RGPD — appliqué traitement par traitement (ITS-SOP-001)."
+      },
+      {
+        "text": "Ces quizz du lundi alimentent quelle preuve QMS ?",
+        "options": [
+          "Aucune",
+          "La formation continue (QMS-REG-003)",
+          "Les ventes",
+          "La paie"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Synthèse périodique consignée dans les Training Records par la QARA. 😉"
+      }
+    ]
+  },
+  {
+    "weekNumber": "S36",
+    "date": "2027-02-08",
+    "label": "8 février 2027",
+    "questions": [
+      {
+        "text": "Qui déclare un incident grave concernant une app tierce que nous distribuons ?",
+        "options": [
+          "AppThera",
+          "Le fabricant de l'app (AppThera transmet l'info)",
+          "Le patient",
+          "Personne"
+        ],
+        "correctAnswer": 1,
+        "explanation": "La vigilance incombe au fabricant ; le distributeur transmet l'information sans délai (Art. 14)."
+      },
+      {
+        "text": "La validation (vs vérification) répond à…",
+        "options": [
+          "« A-t-on bien construit le produit ? »",
+          "« A-t-on construit le bon produit ? »",
+          "« Est-ce rentable ? »",
+          "« Est-ce joli ? »"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Validation = « a-t-on construit le bon produit ? » (besoins utilisateurs satisfaits en conditions réelles)."
+      },
+      {
+        "text": "Le registre des incidents IT/cyber est…",
+        "options": ["ITS-REG-005", "ITS-REG-001", "CUS-REG-001", "QMS-REG-002"],
+        "correctAnswer": 0,
+        "explanation": "ITS-REG-005, tenu côté CTO (ITS-SOP-004) ; distinct du registre violations données perso (ITS-REG-004)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S37",
+    "date": "2027-02-15",
+    "label": "15 février 2027",
+    "questions": [
+      {
+        "text": "Le statut « Obsolete » d'un document signifie…",
+        "options": [
+          "À supprimer immédiatement",
+          "Retiré de l'usage mais conservé pour traçabilité",
+          "En cours de rédaction",
+          "Approuvé"
+        ],
+        "correctAnswer": 1,
+        "explanation": "On conserve l'historique pour la traçabilité ; seuls les documents Effective font foi (QMS-SOP-001)."
+      },
+      {
+        "text": "Un patient mentionne que ses données apparaissent chez un autre utilisateur. C'est…",
+        "options": [
+          "Un ticket banal",
+          "Une violation potentielle de données → DPO immédiatement",
+          "Une réclamation seulement",
+          "Un compliment"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Dimension données personnelles = DPO impliquée sans délai (CUS-SOP-002 + ITS-SOP-003)."
+      },
+      {
+        "text": "Alexis travaille sur…",
+        "options": [
+          "Dev / Produit (D&D)",
+          "Le support",
+          "La compta",
+          "Les audits"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Alexis est sur le Dev/Produit — d'où sa formation approfondie D&D (session S4-bis)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S38",
+    "date": "2027-02-22",
+    "label": "22 février 2027",
+    "questions": [
+      {
+        "text": "L'information des personnes (Art. 34) après une violation est requise si…",
+        "options": [
+          "Toujours",
+          "La violation présente un risque élevé pour leurs droits et libertés",
+          "Jamais",
+          "La CNIL le demande sur Twitter"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Analyse au cas par cas, documentée (ITS-SOP-003, ITS-TPL-002)."
+      },
+      {
+        "text": "Les risques système sont revus…",
+        "options": [
+          "Jamais",
+          "Périodiquement, avec dates de revue planifiées",
+          "Uniquement après incident",
+          "Par l'ANSM"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Chaque risque système a ses dates Last/Next Review (QMS-REG-005, QMS-SOP-007)."
+      },
+      {
+        "text": "L'aptitude à l'utilisation (usability, IEC 62366-1) vise à…",
+        "options": [
+          "Rendre l'app fun",
+          "Prévenir les erreurs d'utilisation dangereuses",
+          "Accélérer le développement",
+          "Réduire les coûts"
+        ],
+        "correctAnswer": 1,
+        "explanation": "IEC 62366-1 : prévenir les erreurs d'utilisation dangereuses ; évaluation sommative au DHF."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S39",
+    "date": "2027-03-01",
+    "label": "1 mars 2027",
+    "questions": [
+      {
+        "text": "Une mise à jour majeure d'une app tierce distribuée déclenche…",
+        "options": [
+          "Rien",
+          "Une re-vérification avant mise à disposition (tests d'intégration)",
+          "Un audit ANSM",
+          "Une nouvelle déclaration de conformité AppThera"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Les vérifications Art. 14 s'appliquent aussi aux évolutions majeures (DIS-SOP-001, DIS-TPL-002)."
+      },
+      {
+        "text": "Qui est notre DPO déclarée ?",
+        "options": ["Hélène", "Manon", "Mikaly", "Alice"],
+        "correctAnswer": 1,
+        "explanation": "Manon, dont la position prévaut sur les sujets RGPD (ITS-REG-002)."
+      },
+      {
+        "text": "« Pragmatique plutôt qu'exhaustif » dans notre QMS signifie…",
+        "options": [
+          "Bâcler",
+          "Des procédures simples, alignées sur ce qu'on fait vraiment",
+          "Pas de documentation",
+          "Copier des templates"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Un QMS lean et vécu est plus conforme qu'une machine à gaz ignorée."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S40",
+    "date": "2027-03-08",
+    "label": "8 mars 2027",
+    "questions": [
+      {
+        "text": "Le PMS Report d'une DTx classe I est mis à jour…",
+        "options": [
+          "Jamais",
+          "Si nécessaire, au rythme défini dans le PMS Plan",
+          "Chaque semaine",
+          "Uniquement sur demande de l'ANSM"
+        ],
+        "correctAnswer": 1,
+        "explanation": "MDR Art. 85 : rapport PMS tenu à jour si nécessaire, au rythme défini au plan PMS (CLI-TPL-002)."
+      },
+      {
+        "text": "Avant de créer un nouveau SOP, on se demande d'abord…",
+        "options": [
+          "Quel logo mettre",
+          "Si un document existant peut couvrir le besoin",
+          "Qui le signera",
+          "Combien de pages il fera"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Étendre l'existant plutôt que multiplier les documents — principe lean du QMS."
+      },
+      {
+        "text": "Travailler depuis un café sur le wifi public sans précaution…",
+        "options": [
+          "Aucun souci",
+          "À éviter selon la charte IT",
+          "C'est recommandé",
+          "C'est obligatoire"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Risque d'interception ; les règles de mobilité sont dans la charte IT (ITS-POL-002)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S41",
+    "date": "2027-03-15",
+    "label": "15 mars 2027",
+    "questions": [
+      {
+        "text": "Le Risk Management Plan produit (ISO 14971) définit…",
+        "options": [
+          "Les salaires",
+          "Les critères d'acceptabilité et la méthode d'analyse des risques",
+          "Le planning marketing",
+          "Les KPI de vente"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Cadre de la gestion des risques produit : critères d'acceptabilité et méthode (DD-SOP-002, ISO 14971)."
+      },
+      {
+        "text": "Le registre des réclamations note si des données perso sont impliquées car…",
+        "options": [
+          "C'est joli",
+          "Ça déclenche l'implication DPO et d'éventuelles obligations RGPD",
+          "La CNIL lit Notion",
+          "Aucune raison"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Le champ « Personal Data Involved » du CUS-REG-001 fait le pont vers ITS-SOP-003 et la DPO."
+      },
+      {
+        "text": "Qui approuve le rapport d'audit interne ?",
+        "options": ["L'audité", "La QARA lead", "L'ANSM", "Personne"],
+        "correctAnswer": 1,
+        "explanation": "La QARA possède le programme d'audit et approuve les rapports (QMS-SOP-003)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S42",
+    "date": "2027-03-22",
+    "label": "22 mars 2027",
+    "questions": [
+      {
+        "text": "Un collègue te demande ton mot de passe « pour aller plus vite ». Tu…",
+        "options": [
+          "Le donnes, c'est un collègue",
+          "Refuses : comptes nominatifs, jamais de partage",
+          "L'écris sur un post-it",
+          "Le changes après coup"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Comptes nominatifs et traçabilité individuelle exigés (ITS-POL-002) — aucune exception."
+      },
+      {
+        "text": "Une FSCA (action corrective de sécurité) sur nos DTx est décidée par…",
+        "options": [
+          "Le support",
+          "QARA + Co-CEO (co-signature)",
+          "Le patient",
+          "Dependabot"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Décision co-signée QARA + Co-CEO, avec notification ANSM (CLI-SOP-002)."
+      },
+      {
+        "text": "En cas d'absence prolongée de Manon pour les audits…",
+        "options": [
+          "On annule l'audit",
+          "On engage un autre auditeur qualifié (critères §3.1)",
+          "Hélène s'auto-audite",
+          "On attend son retour"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Continuité du programme d'audit (QMS-SOP-003) — la dépendance aux personnes clés est un risque suivi."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S43",
+    "date": "2027-03-29",
+    "label": "29 mars 2027",
+    "questions": [
+      {
+        "text": "Une correction ≠ une action corrective car…",
+        "options": [
+          "C'est pareil",
+          "La correction traite le symptôme, l'action corrective la cause racine",
+          "La correction est interdite",
+          "L'action corrective est optionnelle"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Les deux peuvent coexister sur une même NC : on corrige le symptôme ET on traite la cause (QMS-SOP-004)."
+      },
+      {
+        "text": "Le Design Change Log est tenu…",
+        "options": [
+          "En continu",
+          "Une fois par an",
+          "Jamais",
+          "Au lancement seulement"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Chaque changement de conception est tracé en continu avec son impact (Design Change Log, DHF)."
+      },
+      {
+        "text": "La portabilité des données (Art. 20) permet au patient de…",
+        "options": [
+          "Voyager",
+          "Recevoir ses données dans un format structuré et lisible par machine",
+          "Supprimer son compte",
+          "Changer de médecin"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Art. 20 RGPD : format structuré, couramment utilisé et lisible par machine (ITS-SOP-002)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S44",
+    "date": "2027-04-05",
+    "label": "5 avril 2027",
+    "questions": [
+      {
+        "text": "L'accusé de réception d'une réclamation Minor part sous…",
+        "options": ["Immédiatement", "24h", "5 jours ouvrés", "1 mois"],
+        "correctAnswer": 2,
+        "explanation": "SLA gradué par sévérité : Minor = 5 jours ouvrés (CUS-SOP-002 §4)."
+      },
+      {
+        "text": "Le « software validation » (QMS-SOP-008) s'applique à…",
+        "options": [
+          "Nos DTx",
+          "Les outils logiciels utilisés dans le QMS (ex. Notion)",
+          "Les jeux vidéo",
+          "Rien"
+        ],
+        "correctAnswer": 1,
+        "explanation": "ISO 13485 §4.1.6 : validation proportionnée des outils QMS (QMS-SOP-008). Nos DTx suivent la V&V du D&D."
+      },
+      {
+        "text": "Comparer nos DTx à un concurrent nommé dans une pub…",
+        "options": [
+          "Toujours OK",
+          "Très encadré : véracité, loyauté, claims sourcés",
+          "Interdit par le RGPD",
+          "Obligatoire"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Publicité comparative très encadrée : véracité, loyauté, claims sourcés — validation préalable (MAR-SOP-001)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S45",
+    "date": "2027-04-12",
+    "label": "12 avril 2027",
+    "questions": [
+      {
+        "text": "Le RoPA (registre des traitements) est revu…",
+        "options": [
+          "Jamais",
+          "Périodiquement, avec dates de revue planifiées",
+          "Uniquement après violation",
+          "Par la CNIL"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Chaque traitement du RoPA a son cycle de revue (Last/Next Review) — ITS-REG-001."
+      },
+      {
+        "text": "S'appuyer sur l'équivalence clinique avec un autre dispositif exige…",
+        "options": [
+          "Une simple ressemblance",
+          "Une démonstration documentée (technique, biologique, clinique)",
+          "Le même prix",
+          "Le même nom"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Critères stricts (technique, biologique, clinique) pour s'appuyer sur un équivalent (CLI-SOP-003)."
+      },
+      {
+        "text": "Alice est notre référente…",
+        "options": ["Dev", "Customer Support", "Audit", "RH"],
+        "correctAnswer": 1,
+        "explanation": "Premier contact patient : son tri initial support/réclamation est critique pour les SLA."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S46",
+    "date": "2027-04-19",
+    "label": "19 avril 2027",
+    "questions": [
+      {
+        "text": "Une NC détectée par un patient, un audit ou en interne…",
+        "options": [
+          "Suit des processus différents selon la source",
+          "Entre dans le même processus NC, avec la source tracée",
+          "Est ignorée si interne",
+          "Va directement en CAPA"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Source tracée dans QMS-REG-001, traitement unifié quel que soit le canal de détection (QMS-SOP-004)."
+      },
+      {
+        "text": "Le D&D Plan définit notamment…",
+        "options": [
+          "Les vacances de l'équipe",
+          "Phases, livrables, responsabilités et jalons de revue",
+          "Le menu de la cantine",
+          "Les tarifs"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Le D&D Plan cadre le projet DTx : phases, livrables, responsabilités, jalons de revue (DD-SOP-001)."
+      },
+      {
+        "text": "Le chiffrement des postes de travail, c'est…",
+        "options": [
+          "Optionnel",
+          "Une mesure de sécurité standard chez AppThera",
+          "Réservé aux serveurs",
+          "Inutile"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Mesure technique de base (ITS-POL-001) — limite l'impact d'un vol ou d'une perte de poste."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S47",
+    "date": "2027-04-26",
+    "label": "26 avril 2027",
+    "questions": [
+      {
+        "text": "Le délai de réponse au plaignant court même si…",
+        "options": [
+          "L'enquête est en cours — on répond au minimum avec un point d'étape",
+          "Non, tout s'arrête pendant l'enquête",
+          "Le patient est parti",
+          "C'est l'été"
+        ],
+        "correctAnswer": 0,
+        "explanation": "On répond dans les SLA même si l'investigation continue — au minimum un point d'étape (CUS-SOP-002 §7)."
+      },
+      {
+        "text": "Les minutes de revue de direction suivent…",
+        "options": [
+          "Un format libre",
+          "Le template QMS-TPL-002",
+          "Un simple email",
+          "Aucune trace"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Template garantissant la couverture des entrées/sorties ISO 13485 §5.6 (QMS-TPL-002)."
+      },
+      {
+        "text": "Un PMCF (suivi clinique post-commercialisation) est…",
+        "options": [
+          "Toujours obligatoire à l'identique",
+          "Décidé selon le plan PMS, et justifié si non réalisé",
+          "Interdit en classe I",
+          "Un document marketing"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Le PMCF est proportionné ; s'il n'est pas réalisé, la justification est documentée (CLI-TPL-005)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S48",
+    "date": "2027-05-03",
+    "label": "3 mai 2027",
+    "questions": [
+      {
+        "text": "Le consentement RGPD doit être…",
+        "options": [
+          "Présumé",
+          "Libre, spécifique, éclairé et univoque",
+          "Permanent et irrévocable",
+          "Oral uniquement"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Et retirable aussi facilement qu'il a été donné (ITS-SOP-001)."
+      },
+      {
+        "text": "Qui approuve la libération marché d'une DTx ?",
+        "options": [
+          "Alexis",
+          "La PRRC (Hélène), après vérification de conformité",
+          "Le marketing",
+          "Le premier client"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Contrôle de libération par la PRRC : conformité vérifiée avant mise sur le marché (MDR Art. 15, DD-SOP-003)."
+      },
+      {
+        "text": "Un nouveau collaborateur est formé au QMS…",
+        "options": [
+          "Quand il a le temps",
+          "À l'arrivée, selon la matrice de formation (QMS-FRM-001)",
+          "Jamais",
+          "Au bout d'un an"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Compétences requises par rôle, formation à l'arrivée tracée (QMS-SOP-005, QMS-FRM-001)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S49",
+    "date": "2027-05-10",
+    "label": "10 mai 2027",
+    "questions": [
+      {
+        "text": "Si un processus QMS n'est pas suivi en pratique…",
+        "options": [
+          "Pas grave",
+          "C'est une NC : on corrige le processus ou la pratique",
+          "On le cache à l'auditeur",
+          "On supprime le document"
+        ],
+        "correctAnswer": 1,
+        "explanation": "L'écart documentation/réalité est l'un des constats d'audit les plus fréquents — on aligne l'un ou l'autre."
+      },
+      {
+        "text": "Dependabot révèle une CVE critique dans une dépendance de notre DTx. On…",
+        "options": [
+          "Ignore",
+          "Évalue l'impact sécurité/risques et on traite selon D&D/NC",
+          "Désinstalle l'app",
+          "Prévient juste les patients"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Vulnérabilité = entrée PMS → analyse d'impact sécurité/risques, puis action maîtrisée (CLI-SOP-001)."
+      },
+      {
+        "text": "Pourquoi Mikaly est-il formé en profondeur au D&D ?",
+        "options": [
+          "Il s'ennuie",
+          "Le CTO est un acteur clé du cycle de vie logiciel 62304",
+          "C'est obligatoire pour tous",
+          "Il remplace Manon"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Le cycle de vie logiciel IEC 62304 vit dans la tech — session S4-bis dédiée avec Alexis."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S50",
+    "date": "2027-05-17",
+    "label": "17 mai 2027",
+    "questions": [
+      {
+        "text": "Une violation de données jugée non notifiable à la CNIL…",
+        "options": [
+          "N'est pas documentée",
+          "Est quand même inscrite au registre avec justification",
+          "Est supprimée des dossiers",
+          "Est notifiée quand même"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Art. 33(5) : toute violation est documentée au registre, notifiée ou non, avec justification (ITS-REG-004)."
+      },
+      {
+        "text": "Le « stockage/transport » (Art. 14) pour des apps, ça veut dire…",
+        "options": [
+          "Des entrepôts",
+          "L'intégrité de la chaîne de mise à disposition numérique",
+          "Rien du tout",
+          "Des cartons"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Transposé au numérique : intégrité des livrables et des canaux de mise à disposition (DIS-SOP-001)."
+      },
+      {
+        "text": "Les actions décidées en revue de direction sont…",
+        "options": [
+          "Facultatives",
+          "Tracées avec responsable et échéance, suivies à la MR suivante",
+          "Oubliées",
+          "Confiées à l'ANSM"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Sorties de MR = engagements tracés avec responsable et échéance, suivis à la MR suivante (QMS-SOP-002)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S51",
+    "date": "2027-05-24",
+    "label": "24 mai 2027",
+    "questions": [
+      {
+        "text": "Une exigence non couverte par un test dans la matrice de traçabilité…",
+        "options": [
+          "Passe quand même",
+          "Bloque : la couverture doit être complétée avant libération",
+          "Se supprime",
+          "S'ignore"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Couverture complète exigée avant DR-3 et transfert (Traceability Matrix)."
+      },
+      {
+        "text": "Qui décide d'ouvrir une NC suite à une réclamation ?",
+        "options": [
+          "C'est automatique",
+          "Évaluation documentée (typique pour Major/Critical, cas par cas sinon)",
+          "Le patient",
+          "Le fabricant tiers"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Typique pour Major/Critical, évaluation documentée au cas par cas sinon (CUS-SOP-002 §6)."
+      },
+      {
+        "text": "L'offboarding d'un collaborateur inclut…",
+        "options": [
+          "Un pot de départ seulement",
+          "Révocation des accès et récupération du matériel",
+          "Rien",
+          "Un email"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Révocation des accès et récupération du matériel = mesure clé de l'offboarding (ITS-POL-001/002)."
+      }
+    ]
+  },
+  {
+    "weekNumber": "S52",
+    "date": "2027-05-31",
+    "label": "31 mai 2027",
+    "questions": [
+      {
+        "text": "Un an de quizz ! La meilleure preuve qu'un QMS vit, c'est…",
+        "options": [
+          "Son épaisseur",
+          "Des équipes qui appliquent les processus au quotidien",
+          "Son prix",
+          "Ses logos"
+        ],
+        "correctAnswer": 1,
+        "explanation": "La conformité se démontre par la pratique tracée — bravo pour cette année de quizz !"
+      },
+      {
+        "text": "AppThera est à la fois…",
+        "options": [
+          "Fabricant et importateur",
+          "Distributeur (apps tierces) et fabricant (nos DTx)",
+          "Mandataire et organisme notifié",
+          "Grossiste et pharmacie"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Toujours identifier le rôle applicable : les obligations diffèrent (Art. 14 vs Art. 10 MDR)."
+      },
+      {
+        "text": "La boucle qualité complète, c'est…",
+        "options": [
+          "Vendre plus",
+          "PMS → risques → évaluation clinique → amélioration → revue de direction",
+          "Coder plus vite",
+          "Auditer les autres"
+        ],
+        "correctAnswer": 1,
+        "explanation": "L'amélioration continue relie tous nos processus — rendez-vous pour la saison 2 ! 🎉"
+      }
+    ]
+  }
+]
