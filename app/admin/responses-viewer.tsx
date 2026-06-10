@@ -170,7 +170,7 @@ export function AdminResponsesViewer() {
                     handleExportCsv(week.weekNumber, week.label);
                   }}
                   disabled={exportingWeek === week.weekNumber}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#1d3d68] bg-white px-3 py-1.5 text-xs font-semibold text-[#1d3d68] transition hover:bg-[#1d3d68] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#1d3d68] bg-white px-3 py-1.5 text-xs font-semibold text-[#1d3d68] transition hover:bg-[#1d3d68] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   title="Exporter les tentatives en CSV"
                 >
                   {exportingWeek === week.weekNumber ? (

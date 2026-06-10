@@ -67,14 +67,13 @@ export function QuizPlayer({
   return (
     <form onSubmit={handleSubmit} className="mt-4 space-y-6">
       {questions.map((question, index) => (
-        <fieldset
+        <div
           key={question.id}
           className="rounded-xl border border-[#e4dfda] bg-white p-5"
-          disabled={submitted}
         >
-          <legend className="mb-3 text-base font-semibold text-[#1d3d68]">
+          <p className="mb-3 text-base font-semibold text-[#1d3d68]">
             {index + 1}. {question.questionText}
-          </legend>
+          </p>
 
           <div className="space-y-2">
             {question.options.map((option, optionIndex) => {
@@ -118,13 +117,13 @@ export function QuizPlayer({
               {question.explanation}
             </p>
           ) : null}
-        </fieldset>
+        </div>
       ))}
 
       <button
         type="submit"
         disabled={submitted || !allAnswered || submitting}
-        className="inline-flex h-12 items-center justify-center rounded-xl bg-[#ea553a] px-7 text-base font-semibold text-white transition hover:bg-[#d84b31] disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex h-12 items-center justify-center rounded-xl bg-[#ea553a] px-7 text-base font-semibold text-white transition hover:bg-[#d84b31] disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
       >
         {submitting ? "Envoi en cours…" : "Valider mes reponses"}
       </button>

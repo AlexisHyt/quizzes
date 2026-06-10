@@ -370,7 +370,7 @@ export function AdminQuizzesManager() {
                   <div className="flex gap-2">
                     <button
                       type="button"
-                      className="rounded border border-[#d9d4cf] px-2 py-1 text-xs"
+                      className="rounded border border-[#d9d4cf] px-2 py-1 text-xs cursor-pointer"
                       onClick={() => moveQuestion(index, -1)}
                       disabled={index === 0}
                     >
@@ -378,7 +378,7 @@ export function AdminQuizzesManager() {
                     </button>
                     <button
                       type="button"
-                      className="rounded border border-[#d9d4cf] px-2 py-1 text-xs"
+                      className="rounded border border-[#d9d4cf] px-2 py-1 text-xs cursor-pointer"
                       onClick={() => moveQuestion(index, 1)}
                       disabled={index === form.questions.length - 1}
                     >
@@ -386,7 +386,7 @@ export function AdminQuizzesManager() {
                     </button>
                     <button
                       type="button"
-                      className="rounded border border-[#e5533b] px-2 py-1 text-xs text-[#e5533b]"
+                      className="rounded border border-[#e5533b] px-2 py-1 text-xs text-[#e5533b] cursor-pointer"
                       onClick={() => removeQuestion(index)}
                       disabled={form.questions.length <= 1}
                     >
@@ -491,7 +491,7 @@ export function AdminQuizzesManager() {
               <button
                 type="button"
                 onClick={resetForm}
-                className="inline-flex h-10 items-center rounded-lg border border-[#d9d4cf] px-4 text-sm font-semibold text-[#1d3d68]"
+                className="inline-flex h-10 items-center rounded-lg border border-[#d9d4cf] px-4 text-sm font-semibold text-[#1d3d68] cursor-pointer"
               >
                 Annuler
               </button>
@@ -535,7 +535,7 @@ export function AdminQuizzesManager() {
                 <div className="flex gap-2">
                   <button
                     type="button"
-                    className="rounded-lg border border-[#d9d4cf] px-3 py-1.5 text-xs font-semibold text-[#1d3d68]"
+                    className="rounded-lg border border-[#d9d4cf] px-3 py-1.5 text-xs font-semibold text-[#1d3d68] cursor-pointer"
                     onClick={() => startDuplicate(quiz)}
                   >
                     Dupliquer
@@ -543,7 +543,7 @@ export function AdminQuizzesManager() {
 
                   <button
                     type="button"
-                    className="rounded-lg border border-[#1d3d68] px-3 py-1.5 text-xs font-semibold text-[#1d3d68]"
+                    className="rounded-lg border border-[#1d3d68] px-3 py-1.5 text-xs font-semibold text-[#1d3d68] cursor-pointer"
                     onClick={() => startEdit(quiz)}
                   >
                     Modifier
@@ -551,7 +551,7 @@ export function AdminQuizzesManager() {
 
                   <button
                     type="button"
-                    className="rounded-lg border border-[#e5533b] px-3 py-1.5 text-xs font-semibold text-[#e5533b] disabled:opacity-50"
+                    className="rounded-lg border border-[#e5533b] px-3 py-1.5 text-xs font-semibold text-[#e5533b] disabled:opacity-50 cursor-pointer"
                     onClick={() => deleteQuiz(quiz.id)}
                     disabled={deletingQuizId === quiz.id}
                   >

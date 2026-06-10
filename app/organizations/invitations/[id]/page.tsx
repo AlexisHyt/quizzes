@@ -63,7 +63,7 @@ export default async function InvitationPage({
           <button
             type="submit"
             disabled={!isRecipient}
-            className="inline-flex h-12 items-center justify-center rounded-xl bg-[#ea553a] px-7 text-base font-semibold text-white transition hover:bg-[#d84b31] disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex h-12 items-center justify-center rounded-xl bg-[#ea553a] px-7 text-base font-semibold text-white transition hover:bg-[#d84b31] disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
           >
             Accepter l’invitation
           </button>

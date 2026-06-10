@@ -93,7 +93,7 @@ export default async function OrganizationsPage() {
                   <input type="hidden" name="invitationId" value={inv.id} />
                   <button
                     type="submit"
-                    className="inline-flex h-11 items-center justify-center rounded-xl bg-[#ea553a] px-5 text-sm font-semibold text-white transition hover:bg-[#d84b31]"
+                    className="inline-flex h-11 items-center justify-center rounded-xl bg-[#ea553a] px-5 text-sm font-semibold text-white transition hover:bg-[#d84b31] cursor-pointer"
                   >
                     Accepter
                   </button>
@@ -135,7 +135,7 @@ export default async function OrganizationsPage() {
             </label>
             <button
               type="submit"
-              className="inline-flex h-12 items-center justify-center rounded-xl bg-[#1d3d68] px-6 text-sm font-semibold text-white transition hover:bg-[#142846]"
+              className="inline-flex h-12 items-center justify-center rounded-xl bg-[#1d3d68] px-6 text-sm font-semibold text-white transition hover:bg-[#142846] cursor-pointer"
             >
               Créer
             </button>
@@ -175,7 +175,7 @@ export default async function OrganizationsPage() {
                         />
                         <button
                           type="submit"
-                          className="inline-flex h-10 items-center justify-center rounded-xl border border-[#1d3d68] bg-white px-4 text-sm font-semibold text-[#1d3d68] transition hover:bg-[#1d3d68] hover:text-white"
+                          className="inline-flex h-10 items-center justify-center rounded-xl border border-[#1d3d68] bg-white px-4 text-sm font-semibold text-[#1d3d68] transition hover:bg-[#1d3d68] hover:text-white cursor-pointer"
                         >
                           Activer
                         </button>
@@ -229,7 +229,7 @@ export default async function OrganizationsPage() {
               </label>
               <button
                 type="submit"
-                className="inline-flex h-12 items-center justify-center rounded-xl bg-[#ea553a] px-6 text-sm font-semibold text-white transition hover:bg-[#d84b31]"
+                className="inline-flex h-12 items-center justify-center rounded-xl bg-[#ea553a] px-6 text-sm font-semibold text-white transition hover:bg-[#d84b31] cursor-pointer"
               >
                 Envoyer l’invitation
               </button>
@@ -294,7 +294,7 @@ export default async function OrganizationsPage() {
             />
             <button
               type="submit"
-              className="inline-flex h-11 items-center justify-center rounded-xl border border-[#e5533b] bg-white px-5 text-sm font-semibold text-[#e5533b] transition hover:bg-[#fff1ef]"
+              className="inline-flex h-11 items-center justify-center rounded-xl border border-[#e5533b] bg-white px-5 text-sm font-semibold text-[#e5533b] transition hover:bg-[#fff1ef] cursor-pointer"
               disabled={!activeOrganizationId}
             >
               Quitter l’organisation active
