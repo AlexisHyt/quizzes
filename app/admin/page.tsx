@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { AdminQuizzesManager } from "@/app/admin/quizzes-manager";
 import { AdminResponsesViewer } from "@/app/admin/responses-viewer";
 import { auth } from "@/auth";
 import {
@@ -54,16 +55,29 @@ export default async function AdminResponsesPage() {
         </p>
 
         <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#1d3d68]">
-          Réponses des utilisateurs
+          Gestion des quizzes
         </h1>
 
         <p className="mt-4 text-lg leading-8 text-[#4b6484]">
-          Vue d'ensemble des réponses et tentatives de quiz classées par
-          semaine.
+          Crée, modifie et organise les questions et réponses de tes quizzes,
+          puis consulte les tentatives des utilisateurs.
         </p>
 
         <section className="mt-8">
-          <AdminResponsesViewer />
+          <AdminQuizzesManager />
+        </section>
+
+        <section className="mt-10">
+          <h2 className="text-2xl font-semibold tracking-tight text-[#1d3d68]">
+            Réponses des utilisateurs
+          </h2>
+          <p className="mt-2 text-sm text-[#4b6484]">
+            Vue d&apos;ensemble des réponses et tentatives classées par semaine.
+          </p>
+
+          <div className="mt-4">
+            <AdminResponsesViewer />
+          </div>
         </section>
 
         <div className="mt-8">
