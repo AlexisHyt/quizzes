@@ -7,6 +7,7 @@ import {
   sendInvitationAction,
   setActiveOrganizationAction,
 } from "@/app/organizations/actions";
+import { SignOutButton } from "@/app/quiz/sign-out-button";
 import { auth } from "@/auth";
 import {
   getActiveOrganizationForSession,
@@ -305,6 +306,7 @@ export default async function OrganizationsPage() {
             >
               Aller aux quizzes
             </a>
+            <SignOutButton />
           </form>
         </section>
       </main>

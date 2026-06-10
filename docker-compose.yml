@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  quizzes-alexishayat-me:
+    build: .
+    container_name: quizzes-alexishayat-me
+    restart: unless-stopped
+    ports:
+      - "3006:3006"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
