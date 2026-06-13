@@ -97,6 +97,8 @@ export async function GET(request: Request) {
         userName: user.name,
         userEmail: user.email,
         score: quizAttempts.score,
+        pointsEarned: quizAttempts.pointsEarned,
+        medal: quizAttempts.medal,
         isRevision: quizAttempts.isRevision,
         completedAt: quizAttempts.completedAt,
       })
@@ -147,6 +149,8 @@ export async function GET(request: Request) {
       "Email",
       "Score",
       "Total questions",
+      "Points",
+      "Médaille",
       "Mode",
       "Date de complétion",
       ...questionHeaders,
@@ -160,6 +164,8 @@ export async function GET(request: Request) {
         attempt.userEmail,
         String(attempt.score),
         String(quizQuestions.length),
+        String(attempt.pointsEarned),
+        String(attempt.medal),
         attempt.isRevision ? "Révision" : "Tentative réelle",
         new Date(attempt.completedAt).toLocaleString("fr-FR", {
           timeZone: "Europe/Paris",

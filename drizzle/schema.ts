@@ -248,6 +248,9 @@ export const quizAttempts = pgTable("quizAttempts", {
     .notNull()
     .references(() => quizzes.id, { onDelete: "cascade" }),
   score: integer("score").notNull(), // Number of correct answers (0-3)
+  totalQuestions: integer("totalQuestions").notNull().default(0),
+  pointsEarned: integer("pointsEarned").notNull().default(0),
+  medal: text("medal").notNull().default("none"),
   isRevision: integer("isRevision").notNull().default(0), // 1 if revision mode, 0 if actual attempt
   completedAt: timestamp("completedAt").defaultNow().notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -255,3 +258,36 @@ export const quizAttempts = pgTable("quizAttempts", {
 
 export type QuizAttempt = typeof quizAttempts.$inferSelect;
 export type InsertQuizAttempt = typeof quizAttempts.$inferInsert;
+
+export const userQuizStats = pgTable(
+  "userQuizStats",
+  {
+    id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+    userId: text("userId")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    organizationId: text("organization_id")
+      .notNull()
+      .references(() => organization.id, { onDelete: "cascade" }),
+    totalPoints: integer("totalPoints").notNull().default(0),
+    bestScore: integer("bestScore").notNull().default(0),
+    bestTotalQuestions: integer("bestTotalQuestions").notNull().default(0),
+    realAttemptsCount: integer("realAttemptsCount").notNull().default(0),
+    revisionAttemptsCount: integer("revisionAttemptsCount")
+      .notNull()
+      .default(0),
+    lastRealAttemptAt: timestamp("lastRealAttemptAt"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex("user_quiz_stats_user_org_unique").on(
+      table.userId,
+      table.organizationId,
+    ),
+    index("user_quiz_stats_organization_idx").on(table.organizationId),
+  ],
+);
+
+export type UserQuizStats = typeof userQuizStats.$inferSelect;
+export type InsertUserQuizStats = typeof userQuizStats.$inferInsert;

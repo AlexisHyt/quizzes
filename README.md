@@ -9,6 +9,7 @@ Base technique de l'application quiz avec authentication Google (Better Auth + N
 - Redirection automatique vers `/quiz` si deja connecte
 - Page `/quiz` protegee cote serveur
 - Bouton deconnexion
+- Gamification persistée: points, medailles, meilleure performance et historique des tentatives
 
 ## Variables d'environnement
 
@@ -27,6 +28,7 @@ GOOGLE_CLIENT_SECRET=
 
 ```bash
 npm install
+npx drizzle-kit migrate
 npm run dev
 ```
 

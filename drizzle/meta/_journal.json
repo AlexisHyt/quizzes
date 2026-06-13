@@ -50,6 +50,20 @@
       "when": 1781045965545,
       "tag": "0006_replace_id_generated_identity",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1781164800000,
+      "tag": "0007_add_gamification_persistence",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1781346950812,
+      "tag": "0008_remove_streak_stats",
+      "breakpoints": true
     }
   ]
 }

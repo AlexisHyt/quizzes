@@ -1,11 +1,11 @@
-import { asc, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { QuizPlayer } from "@/app/quiz/quiz-player";
 import { SignOutButton } from "@/app/quiz/sign-out-button";
 import { auth } from "@/auth";
 import { db } from "@/drizzle/db";
-import { questions, quizzes } from "@/drizzle/schema";
+import { questions, quizzes, userQuizStats } from "@/drizzle/schema";
 import {
   getActiveOrganizationForSession,
   getOrganizationMembership,
@@ -77,6 +77,20 @@ export default async function OldQuizPage({
   );
   const canAccessAdmin =
     !!membership && ["owner", "admin"].includes(membership.role);
+  const [personalStats] = await db
+    .select({
+      totalPoints: userQuizStats.totalPoints,
+      bestScore: userQuizStats.bestScore,
+      bestTotalQuestions: userQuizStats.bestTotalQuestions,
+    })
+    .from(userQuizStats)
+    .where(
+      and(
+        eq(userQuizStats.userId, session.user.id),
+        eq(userQuizStats.organizationId, activeOrganization.id),
+      ),
+    )
+    .limit(1);
 
   return (
     <div className="flex min-h-screen items-start justify-center bg-[#e7e0d8] px-6 py-16 text-[#1f3e68]">
@@ -97,6 +111,27 @@ export default async function OldQuizPage({
           Ce quiz est en mode révision. Tes réponses seront enregistrées comme
           une révision.
         </p>
+
+        <section className="mt-5 rounded-xl border border-[#e4dfda] bg-white p-4">
+          <h2 className="text-base font-semibold text-[#1d3d68]">
+            Ta progression personnelle
+          </h2>
+          {personalStats ? (
+            <div className="mt-2 grid gap-2 text-sm text-[#1d3d68] sm:grid-cols-2">
+              <p className="rounded-lg bg-[#f6f6f6] px-3 py-2">
+                Points totaux: {personalStats.totalPoints}
+              </p>
+              <p className="rounded-lg bg-[#f6f6f6] px-3 py-2">
+                Meilleure perf: {personalStats.bestScore}/
+                {personalStats.bestTotalQuestions}
+              </p>
+            </div>
+          ) : (
+            <p className="mt-2 text-sm text-[#4b6484]">
+              Pas encore de stats personnelles.
+            </p>
+          )}
+        </section>
 
         {quizQuestions.length === 0 ? (
           <p className="mt-8 rounded-xl border border-[#e4dfda] bg-white p-4 text-sm text-[#4b6484]">

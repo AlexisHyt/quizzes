@@ -1,12 +1,28 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { getMedalEmoji } from "@/app/quiz/recent-attempts-history";
 import type { Question } from "@/drizzle/schema";
+import type { Medal } from "@/lib/gamification";
 
 type QuizPlayerProps = {
   quizId: number;
   questions: Question[];
   isRevision?: boolean;
+};
+
+type SubmissionResult = {
+  score: number;
+  total: number;
+  pointsEarned: number;
+  medal: Medal;
+  profile: {
+    totalPoints: number;
+    bestScore: number;
+    bestTotalQuestions: number;
+    realAttemptsCount: number;
+    revisionAttemptsCount: number;
+  } | null;
 };
 
 export function QuizPlayer({
@@ -18,6 +34,8 @@ export function QuizPlayer({
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [submissionResult, setSubmissionResult] =
+    useState<SubmissionResult | null>(null);
 
   const score = useMemo(() => {
     if (!submitted) {
@@ -32,6 +50,11 @@ export function QuizPlayer({
   const allAnswered = questions.every(
     (question) => answers[question.id] !== undefined,
   );
+  const answeredCount = questions.filter(
+    (question) => answers[question.id] !== undefined,
+  ).length;
+  const progressWidth =
+    questions.length > 0 ? (answeredCount / questions.length) * 100 : 0;
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -56,6 +79,8 @@ export function QuizPlayer({
         return;
       }
 
+      const data = (await res.json()) as SubmissionResult;
+      setSubmissionResult(data);
       setSubmitted(true);
     } catch {
       setError("Une erreur réseau est survenue.");
@@ -66,6 +91,21 @@ export function QuizPlayer({
 
   return (
     <form onSubmit={handleSubmit} className="mt-4 space-y-6">
+      <div className="rounded-xl border border-[#e4dfda] bg-white p-4">
+        <div className="mb-2 flex items-center justify-between text-xs font-semibold text-[#4b6484]">
+          <span>Progression</span>
+          <span>
+            {answeredCount}/{questions.length} reponses
+          </span>
+        </div>
+        <div className="h-2 overflow-hidden rounded-full bg-[#ece7e2]">
+          <div
+            className="h-full rounded-full bg-[#1d3d68] transition-all duration-500"
+            style={{ width: `${progressWidth}%` }}
+          />
+        </div>
+      </div>
+
       {questions.map((question, index) => (
         <div
           key={question.id}
@@ -135,9 +175,30 @@ export function QuizPlayer({
       ) : null}
 
       {submitted ? (
-        <p className="rounded-xl border border-[#e4dfda] bg-white p-4 text-base font-semibold text-[#1d3d68]">
-          Score: {score} / {questions.length}
-        </p>
+        <div className="animate-in fade-in-0 zoom-in-95 rounded-xl border border-[#e4dfda] bg-white p-4 text-[#1d3d68] duration-300">
+          <p className="text-base font-semibold">
+            Score: {submissionResult?.score ?? score} /{" "}
+            {submissionResult?.total ?? questions.length}
+          </p>
+          <p className="mt-1 text-sm text-[#4b6484]">
+            Points gagnes: {submissionResult?.pointsEarned ?? 0}
+          </p>
+          <p className="mt-1 text-sm text-[#4b6484]">
+            Medaille: {getMedalEmoji(submissionResult?.medal ?? "none")}
+          </p>
+
+          {submissionResult?.profile ? (
+            <div className="mt-3 grid gap-2 text-sm text-[#1d3d68] sm:grid-cols-2">
+              <p className="rounded-lg bg-[#f6f6f6] px-3 py-2">
+                Points totaux: {submissionResult.profile.totalPoints}
+              </p>
+              <p className="rounded-lg bg-[#f6f6f6] px-3 py-2">
+                Meilleure perf: {submissionResult.profile.bestScore}/
+                {submissionResult.profile.bestTotalQuestions}
+              </p>
+            </div>
+          ) : null}
+        </div>
       ) : null}
     </form>
   );

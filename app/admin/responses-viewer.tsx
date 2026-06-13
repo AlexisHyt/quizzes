@@ -9,6 +9,9 @@ interface Attempt {
   userEmail: string;
   quizId: number;
   score: number;
+  totalQuestions: number;
+  pointsEarned: number;
+  medal: string;
   isRevision: number;
   completedAt: string;
   weekNumber: string;
@@ -272,7 +275,13 @@ export function AdminResponsesViewer() {
                                 </span>
                               </p>
                               <p className="text-[#4b6484]">
-                                Score: {attempt.score}/3
+                                Score: {attempt.score}/{attempt.totalQuestions}
+                              </p>
+                              <p className="text-[#4b6484]">
+                                Points: {attempt.pointsEarned}
+                              </p>
+                              <p className="text-xs text-[#4b6484]">
+                                Medaille: {attempt.medal}
                               </p>
                               <p className="text-xs text-[#4b6484]">
                                 {attempt.responses.length} réponse

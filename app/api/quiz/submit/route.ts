@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { auth } from "@/auth";
 import { db } from "@/drizzle/db";
@@ -6,8 +6,14 @@ import {
   questions,
   quizAttempts,
   quizzes,
+  userQuizStats,
   userResponses,
 } from "@/drizzle/schema";
+import {
+  computeMedal,
+  computePoints,
+  isBetterPerformance,
+} from "@/lib/gamification";
 import {
   getActiveOrganizationForSession,
   type OrganizationSession,
@@ -91,12 +97,20 @@ export async function POST(request: Request) {
       0,
     );
 
+    const totalQuestions = quizQuestions.length;
+    const pointsEarned = computePoints(score, totalQuestions);
+    const medal = computeMedal(score, totalQuestions);
+    const isRealAttempt = !isRevision;
+
     const [attempt] = await db
       .insert(quizAttempts)
       .values({
         userId: session.user.id,
         quizId,
         score,
+        totalQuestions,
+        pointsEarned,
+        medal,
         isRevision: isRevision ? 1 : 0,
       })
       .returning({ id: quizAttempts.id });
@@ -119,7 +133,83 @@ export async function POST(request: Request) {
       })),
     );
 
-    return Response.json({ score, total: quizQuestions.length });
+    const [existingStats] = await db
+      .select()
+      .from(userQuizStats)
+      .where(
+        and(
+          eq(userQuizStats.userId, session.user.id),
+          eq(userQuizStats.organizationId, activeOrganization.id),
+        ),
+      )
+      .limit(1);
+
+    const now = new Date();
+
+    const hasBetterPerformance = isBetterPerformance(
+      score,
+      totalQuestions,
+      existingStats?.bestScore ?? 0,
+      existingStats?.bestTotalQuestions ?? 0,
+    );
+
+    if (!existingStats) {
+      await db.insert(userQuizStats).values({
+        userId: session.user.id,
+        organizationId: activeOrganization.id,
+        totalPoints: pointsEarned,
+        bestScore: score,
+        bestTotalQuestions: totalQuestions,
+        realAttemptsCount: isRealAttempt ? 1 : 0,
+        revisionAttemptsCount: isRealAttempt ? 0 : 1,
+        lastRealAttemptAt: isRealAttempt ? now : null,
+        updatedAt: now,
+      });
+    } else {
+      await db
+        .update(userQuizStats)
+        .set({
+          totalPoints: existingStats.totalPoints + pointsEarned,
+          bestScore: hasBetterPerformance ? score : existingStats.bestScore,
+          bestTotalQuestions: hasBetterPerformance
+            ? totalQuestions
+            : existingStats.bestTotalQuestions,
+          realAttemptsCount:
+            existingStats.realAttemptsCount + (isRealAttempt ? 1 : 0),
+          revisionAttemptsCount:
+            existingStats.revisionAttemptsCount + (isRealAttempt ? 0 : 1),
+          lastRealAttemptAt: isRealAttempt
+            ? now
+            : existingStats.lastRealAttemptAt,
+          updatedAt: now,
+        })
+        .where(eq(userQuizStats.id, existingStats.id));
+    }
+
+    const [updatedStats] = await db
+      .select({
+        totalPoints: userQuizStats.totalPoints,
+        bestScore: userQuizStats.bestScore,
+        bestTotalQuestions: userQuizStats.bestTotalQuestions,
+        realAttemptsCount: userQuizStats.realAttemptsCount,
+        revisionAttemptsCount: userQuizStats.revisionAttemptsCount,
+      })
+      .from(userQuizStats)
+      .where(
+        and(
+          eq(userQuizStats.userId, session.user.id),
+          eq(userQuizStats.organizationId, activeOrganization.id),
+        ),
+      )
+      .limit(1);
+
+    return Response.json({
+      score,
+      total: totalQuestions,
+      pointsEarned,
+      medal,
+      profile: updatedStats ?? null,
+    });
   } catch (error) {
     console.error("Error submitting quiz:", error);
     return Response.json({ error: "Internal server error" }, { status: 500 });
