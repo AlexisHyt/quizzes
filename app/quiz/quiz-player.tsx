@@ -153,9 +153,7 @@ export function QuizPlayer({
           </div>
 
           {submitted ? (
-            <p className="mt-3 text-sm text-[#4b6484]">
-              {question.explanation}
-            </p>
+            <p className="mt-3 text-sm text-gray-800">{question.explanation}</p>
           ) : null}
         </div>
       ))}
