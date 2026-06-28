@@ -20,6 +20,18 @@ const client = new Client({
   connectionString: DATABASE_URL,
 });
 
+function getQuizUtcRange(dateOnly) {
+  const startAt = new Date(`${dateOnly}T00:00:00.000Z`);
+  const endAt = new Date(startAt);
+  endAt.setUTCDate(endAt.getUTCDate() + 6);
+  endAt.setUTCHours(23, 59, 59, 999);
+
+  return {
+    startAt: startAt.toISOString(),
+    endAt: endAt.toISOString(),
+  };
+}
+
 async function seedQuizzes() {
   try {
     // Créer une connexion
@@ -52,10 +64,12 @@ async function seedQuizzes() {
 
     // Insérer les quiz et les questions
     for (const quiz of quizzesData) {
+      const { startAt, endAt } = getQuizUtcRange(quiz.date);
+
       // Insérer le quiz
       const quizResult = await client.query(
-        'INSERT INTO quizzes ("weekNumber", "date", "label", "organization_id") VALUES ($1, $2, $3, $4) RETURNING id',
-        [quiz.weekNumber, quiz.date, quiz.label, "org_default"],
+        'INSERT INTO quizzes ("startAt", "endAt", "organization_id") VALUES ($1, $2, $3) RETURNING id',
+        [startAt, endAt, "org_default"],
       );
 
       const quizId = quizResult.rows[0].id;
@@ -77,7 +91,7 @@ async function seedQuizzes() {
       }
 
       console.log(
-        `✓ ${quiz.weekNumber} - ${quiz.label} inséré avec ${quiz.questions.length} questions`,
+        `✓ ${startAt} - ${endAt} insere avec ${quiz.questions.length} questions`,
       );
     }
 

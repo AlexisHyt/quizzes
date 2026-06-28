@@ -58,22 +58,23 @@ export async function GET(request: Request) {
     }
 
     const { searchParams } = new URL(request.url);
-    const weekNumber = searchParams.get("weekNumber");
+    const quizIdInput = searchParams.get("quizId");
+    const quizId = Number.parseInt(quizIdInput ?? "", 10);
 
-    if (!weekNumber) {
+    if (!quizIdInput || Number.isNaN(quizId)) {
       return Response.json(
-        { error: "weekNumber query param is required" },
+        { error: "quizId query param is required" },
         { status: 400 },
       );
     }
 
-    // Récupérer le quiz correspondant à cette semaine
+    // Récupérer le quiz correspondant
     const [quiz] = await db
       .select()
       .from(quizzes)
       .where(
         and(
-          eq(quizzes.weekNumber, weekNumber),
+          eq(quizzes.id, quizId),
           eq(quizzes.organizationId, activeOrganizationId),
         ),
       );
@@ -145,6 +146,9 @@ export async function GET(request: Request) {
     }
 
     const csvHeaders = [
+      "Quiz",
+      "Debut UTC",
+      "Fin UTC",
       "Utilisateur",
       "Email",
       "Score",
@@ -158,8 +162,14 @@ export async function GET(request: Request) {
 
     const csvRows: string[][] = [csvHeaders];
 
+    const startDateKey = quiz.startAt.toISOString().slice(0, 10);
+    const endDateKey = quiz.endAt.toISOString().slice(0, 10);
+
     for (const attempt of attempts) {
       const row: string[] = [
+        `Quiz #${quiz.id}`,
+        quiz.startAt.toISOString(),
+        quiz.endAt.toISOString(),
         attempt.userName,
         attempt.userEmail,
         String(attempt.score),
@@ -196,7 +206,7 @@ export async function GET(request: Request) {
       .join("\n");
 
     const bom = "\uFEFF"; // BOM UTF-8 pour Excel
-    const filename = `quiz-${weekNumber}-${quiz.label.replace(/\s+/g, "-")}.csv`;
+    const filename = `quiz-${quiz.id}-${startDateKey}-${endDateKey}.csv`;
 
     return new Response(bom + csvContent, {
       status: 200,

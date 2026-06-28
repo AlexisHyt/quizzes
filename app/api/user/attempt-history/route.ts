@@ -25,9 +25,9 @@ export async function GET() {
     const recentAttempts = await db
       .select({
         attemptId: quizAttempts.id,
-        weekNumber: quizzes.weekNumber,
-        label: quizzes.label,
-        date: quizzes.date,
+        quizId: quizzes.id,
+        startAt: quizzes.startAt,
+        endAt: quizzes.endAt,
         score: quizAttempts.score,
         totalQuestions: quizAttempts.totalQuestions,
         pointsEarned: quizAttempts.pointsEarned,

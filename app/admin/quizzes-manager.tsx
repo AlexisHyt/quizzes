@@ -12,9 +12,8 @@ type ManagedQuestion = {
 
 type ManagedQuiz = {
   id: number;
-  weekNumber: string;
-  date: string;
-  label: string;
+  startAt: string;
+  endAt: string;
   questions: ManagedQuestion[];
 };
 
@@ -22,7 +21,7 @@ type QuizzesResponse = {
   quizzes: ManagedQuiz[];
 };
 
-const WEEK_NUMBER_PATTERN = /^S\d{2}$/;
+type DurationPreset = "custom" | "week" | "month";
 
 function createEmptyQuestion(): ManagedQuestion {
   return {
@@ -35,11 +34,61 @@ function createEmptyQuestion(): ManagedQuestion {
 
 function createEmptyForm() {
   return {
-    weekNumber: "",
-    date: "",
-    label: "",
+    startDate: "",
+    endDate: "",
+    durationPreset: "week" as DurationPreset,
     questions: [createEmptyQuestion()],
   };
+}
+
+function shiftUtcDays(dateInput: string, days: number): string {
+  const base = new Date(`${dateInput}T00:00:00.000Z`);
+  base.setUTCDate(base.getUTCDate() + days);
+  return base.toISOString().slice(0, 10);
+}
+
+function getPresetEndDate(
+  startDate: string,
+  durationPreset: DurationPreset,
+): string {
+  if (!startDate) {
+    return "";
+  }
+
+  if (durationPreset === "week") {
+    return shiftUtcDays(startDate, 6);
+  }
+
+  if (durationPreset === "month") {
+    const start = new Date(`${startDate}T00:00:00.000Z`);
+    const end = new Date(start);
+    end.setUTCMonth(end.getUTCMonth() + 1);
+    end.setUTCDate(end.getUTCDate() - 1);
+    return end.toISOString().slice(0, 10);
+  }
+
+  return "";
+}
+
+function formatDateUtc(isoDate: string): string {
+  return new Date(isoDate).toLocaleDateString("fr-FR", {
+    timeZone: "UTC",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function toDateInputValue(isoDate: string): string {
+  return new Date(isoDate).toISOString().slice(0, 10);
+}
+
+function formatQuizLabel(quiz: Pick<ManagedQuiz, "startAt">): string {
+  return formatDateUtc(quiz.startAt);
+}
+
+function formatQuizRange(quiz: Pick<ManagedQuiz, "startAt" | "endAt">): string {
+  return `${formatDateUtc(quiz.startAt)} - ${formatDateUtc(quiz.endAt)}`;
 }
 
 export function AdminQuizzesManager() {
@@ -56,7 +105,9 @@ export function AdminQuizzesManager() {
   const sortedQuizzes = useMemo(
     () =>
       [...quizzes].sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        (a, b) =>
+          new Date(a.endAt).getTime() - new Date(b.endAt).getTime() ||
+          new Date(b.startAt).getTime() - new Date(a.startAt).getTime(),
       ),
     [quizzes],
   );
@@ -95,9 +146,9 @@ export function AdminQuizzesManager() {
   function startEdit(quiz: ManagedQuiz) {
     setEditingQuizId(quiz.id);
     setForm({
-      weekNumber: quiz.weekNumber,
-      date: quiz.date,
-      label: quiz.label,
+      startDate: toDateInputValue(quiz.startAt),
+      endDate: toDateInputValue(quiz.endAt),
+      durationPreset: "custom",
       questions: quiz.questions.map((question) => ({
         id: question.id,
         questionText: question.questionText,
@@ -109,27 +160,21 @@ export function AdminQuizzesManager() {
   }
 
   function startDuplicate(quiz: ManagedQuiz) {
-    const [year, month, day] = quiz.date
-      .split("-")
-      .map((part) => Number.parseInt(part, 10));
-    const sourceDate = new Date(year, (month ?? 1) - 1, day ?? 1);
-    sourceDate.setDate(sourceDate.getDate() + 7);
+    const sourceStart = new Date(quiz.startAt);
+    const sourceEnd = new Date(quiz.endAt);
+    const duration = sourceEnd.getTime() - sourceStart.getTime();
 
-    const nextDate = `${sourceDate.getFullYear()}-${String(sourceDate.getMonth() + 1).padStart(2, "0")}-${String(sourceDate.getDate()).padStart(2, "0")}`;
-    const currentWeekNumber = Number.parseInt(
-      quiz.weekNumber.replace(/^S/, ""),
-      10,
-    );
-    const nextWeekNumber = Number.isNaN(currentWeekNumber)
-      ? ""
-      : `S${String(currentWeekNumber + 1).padStart(2, "0")}`;
+    const duplicatedStart = new Date(sourceStart);
+    duplicatedStart.setUTCDate(duplicatedStart.getUTCDate() + 7);
+
+    const duplicatedEnd = new Date(duplicatedStart.getTime() + duration);
 
     setEditingQuizId(null);
     setError(null);
     setForm({
-      weekNumber: nextWeekNumber,
-      date: nextDate,
-      label: `${quiz.label} (copie)`,
+      startDate: duplicatedStart.toISOString().slice(0, 10),
+      endDate: duplicatedEnd.toISOString().slice(0, 10),
+      durationPreset: "custom",
       questions: quiz.questions.map((question) => ({
         questionText: question.questionText,
         options: [...question.options] as [string, string, string, string],
@@ -213,26 +258,23 @@ export function AdminQuizzesManager() {
     setSaving(true);
     setError(null);
 
-    if (!WEEK_NUMBER_PATTERN.test(form.weekNumber.trim())) {
+    if (!form.startDate || !form.endDate) {
       setSaving(false);
-      setError("Le numero de semaine doit etre au format S01, S02, etc.");
+      setError("Les dates de debut et de fin sont obligatoires.");
       return;
     }
 
-    const [year, month, day] = form.date
-      .split("-")
-      .map((part) => Number.parseInt(part, 10));
-    const mondayCheck = new Date(year, (month ?? 1) - 1, day ?? 1);
-    if (mondayCheck.getDay() !== 1) {
+    const startAt = new Date(`${form.startDate}T00:00:00.000Z`);
+    const endAt = new Date(`${form.endDate}T23:59:59.999Z`);
+    if (startAt.getTime() > endAt.getTime()) {
       setSaving(false);
-      setError("La date du quiz doit correspondre a un lundi.");
+      setError("La date de fin doit etre egale ou posterieure a la date de debut.");
       return;
     }
 
     const payload = {
-      weekNumber: form.weekNumber.trim(),
-      date: form.date,
-      label: form.label.trim(),
+      startDate: form.startDate,
+      endDate: form.endDate,
       questions: form.questions.map((question) => ({
         questionText: question.questionText.trim(),
         options: question.options.map((option) => option.trim()),
@@ -313,46 +355,70 @@ export function AdminQuizzesManager() {
         <form className="mt-4 space-y-4" onSubmit={handleSubmit}>
           <div className="grid gap-3 sm:grid-cols-3">
             <label className="text-sm font-medium text-[#1d3d68]">
-              Semaine
-              <input
-                required
-                value={form.weekNumber}
-                onChange={(event) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    weekNumber: event.target.value,
-                  }))
-                }
-                className="mt-1 w-full rounded-lg border border-[#d9d4cf] px-3 py-2 text-sm"
-                placeholder="S14"
-                pattern="S[0-9]{2}"
-              />
-            </label>
-
-            <label className="text-sm font-medium text-[#1d3d68]">
-              Date (lundi)
+              Debut (UTC)
               <input
                 required
                 type="date"
-                value={form.date}
+                value={form.startDate}
                 onChange={(event) =>
-                  setForm((prev) => ({ ...prev, date: event.target.value }))
+                  setForm((prev) => {
+                    const nextStartDate = event.target.value;
+                    if (prev.durationPreset === "custom") {
+                      return { ...prev, startDate: nextStartDate };
+                    }
+
+                    return {
+                      ...prev,
+                      startDate: nextStartDate,
+                      endDate: getPresetEndDate(nextStartDate, prev.durationPreset),
+                    };
+                  })
                 }
                 className="mt-1 w-full rounded-lg border border-[#d9d4cf] px-3 py-2 text-sm"
               />
             </label>
 
             <label className="text-sm font-medium text-[#1d3d68]">
-              Libellé
+              Fin (UTC)
               <input
                 required
-                value={form.label}
+                type="date"
+                value={form.endDate}
                 onChange={(event) =>
-                  setForm((prev) => ({ ...prev, label: event.target.value }))
+                  setForm((prev) => ({
+                    ...prev,
+                    endDate: event.target.value,
+                    durationPreset: "custom",
+                  }))
                 }
                 className="mt-1 w-full rounded-lg border border-[#d9d4cf] px-3 py-2 text-sm"
-                placeholder="07 avril 2026"
               />
+            </label>
+
+            <label className="text-sm font-medium text-[#1d3d68]">
+              Duree par defaut
+              <select
+                value={form.durationPreset}
+                onChange={(event) =>
+                  setForm((prev) => {
+                    const nextPreset = event.target.value as DurationPreset;
+                    if (nextPreset === "custom") {
+                      return { ...prev, durationPreset: nextPreset };
+                    }
+
+                    return {
+                      ...prev,
+                      durationPreset: nextPreset,
+                      endDate: getPresetEndDate(prev.startDate, nextPreset),
+                    };
+                  })
+                }
+                className="mt-1 w-full rounded-lg border border-[#d9d4cf] px-3 py-2 text-sm"
+              >
+                <option value="week">1 semaine</option>
+                <option value="month">1 mois</option>
+                <option value="custom">Personnalise</option>
+              </select>
             </label>
           </div>
 
@@ -524,10 +590,10 @@ export function AdminQuizzesManager() {
               >
                 <div>
                   <p className="font-semibold text-[#1d3d68]">
-                    {quiz.weekNumber} - {quiz.label}
+                    {formatQuizLabel(quiz)}
                   </p>
                   <p className="text-xs text-[#4b6484]">
-                    {quiz.date} - {quiz.questions.length} question
+                    {formatQuizRange(quiz)} - {quiz.questions.length} question
                     {quiz.questions.length > 1 ? "s" : ""}
                   </p>
                 </div>

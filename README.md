@@ -10,6 +10,7 @@ Base technique de l'application quiz avec authentication Google (Better Auth + N
 - Page `/quiz` protegee cote serveur
 - Bouton deconnexion
 - Gamification persistée: points, medailles, meilleure performance et historique des tentatives
+- Quizzes planifies par periode UTC (`startAt` / `endAt`), avec plusieurs quizzes actifs possibles en meme temps
 
 ## Variables d'environnement
 

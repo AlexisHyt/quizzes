@@ -7,7 +7,6 @@ import {
   sendInvitationAction,
   setActiveOrganizationAction,
 } from "@/app/organizations/actions";
-import { SignOutButton } from "@/app/quiz/sign-out-button";
 import { auth } from "@/auth";
 import {
   getActiveOrganizationForSession,
@@ -52,14 +51,14 @@ export default async function OrganizationsPage() {
     : [];
 
   return (
-    <div className="flex min-h-screen items-start justify-center bg-[#e7e0d8] px-6 py-16 text-[#1f3e68]">
+    <div className="flex min-h-screen items-start justify-center bg-[#e7e0d8] px-6 py-10 text-[#1f3e68]">
       <main className="w-full max-w-6xl space-y-8 rounded-2xl border border-[#e4dfda] bg-[#f6f6f6] p-8 shadow-[0_16px_40px_rgba(22,26,29,0.12)] sm:p-10">
         <div>
           <p className="text-xs font-semibold tracking-[0.22em] text-[#e5533b] uppercase">
             Organisations
           </p>
           <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#1d3d68]">
-            Bonjour {session.user.name}
+            Gerer les organisations
           </h1>
           <p className="mt-3 text-lg leading-8 text-[#4b6484]">
             Crée ou rejoins une organisation, puis active-en une pour accéder
@@ -123,15 +122,7 @@ export default async function OrganizationsPage() {
               <input
                 name="name"
                 className="w-full rounded-xl border border-[#d9d4cf] px-4 py-3 outline-none focus:border-[#1d3d68]"
-                placeholder="AppThera Qualité"
-              />
-            </label>
-            <label className="block space-y-2 text-sm font-medium text-[#1d3d68]">
-              <span>Slug</span>
-              <input
-                name="slug"
-                className="w-full rounded-xl border border-[#d9d4cf] px-4 py-3 outline-none focus:border-[#1d3d68]"
-                placeholder="appthera-qualite"
+                placeholder="Mon Organisation"
               />
             </label>
             <button
@@ -300,13 +291,6 @@ export default async function OrganizationsPage() {
             >
               Quitter l’organisation active
             </button>
-            <a
-              href="/quiz"
-              className="inline-flex h-11 items-center justify-center rounded-xl bg-[#1d3d68] px-5 text-sm font-semibold text-white transition hover:bg-[#142846]"
-            >
-              Aller aux quizzes
-            </a>
-            <SignOutButton />
           </form>
         </section>
       </main>

@@ -178,9 +178,8 @@ export const quizzes = pgTable(
   "quizzes",
   {
     id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-    weekNumber: varchar("weekNumber", { length: 10 }).notNull(), // S01, S02, etc.
-    date: varchar("date", { length: 10 }).notNull(), // YYYY-MM-DD format
-    label: text("label").notNull(), // Human readable date
+    startAt: timestamp("startAt", { withTimezone: true }).notNull(),
+    endAt: timestamp("endAt", { withTimezone: true }).notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),
     organizationId: text("organization_id")
@@ -189,10 +188,11 @@ export const quizzes = pgTable(
   },
   (table) => [
     index("quizzes_organizationId_idx").on(table.organizationId),
-    uniqueIndex("quizzes_organization_week_unique").on(
+    index("quizzes_organization_startAt_idx").on(
       table.organizationId,
-      table.weekNumber,
+      table.startAt,
     ),
+    index("quizzes_organization_endAt_idx").on(table.organizationId, table.endAt),
   ],
 );
 

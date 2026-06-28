@@ -14,9 +14,8 @@ interface Attempt {
   medal: string;
   isRevision: number;
   completedAt: string;
-  weekNumber: string;
-  date: string;
-  label: string;
+  startAt: string;
+  endAt: string;
   responses: Response[];
 }
 
@@ -41,34 +40,44 @@ interface QuizQuestion {
   orderIndex: number;
 }
 
-interface WeekData {
-  weekNumber: string;
-  date: string;
-  label: string;
+interface QuizData {
+  quizId: number;
+  startAt: string;
+  endAt: string;
   questions: QuizQuestion[];
   attempts: Attempt[];
   responsesCount: number;
 }
 
 interface AdminResponsesData {
-  weeks: WeekData[];
+  quizzes: QuizData[];
+}
+
+function formatQuizRange(startAt: string, endAt: string): string {
+  const options: Intl.DateTimeFormatOptions = {
+    timeZone: "UTC",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  };
+  return `${new Date(startAt).toLocaleDateString("fr-FR", options)} - ${new Date(endAt).toLocaleDateString("fr-FR", options)}`;
 }
 
 export function AdminResponsesViewer() {
   const [data, setData] = useState<AdminResponsesData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [expandedWeek, setExpandedWeek] = useState<string | null>(null);
+  const [expandedQuizId, setExpandedQuizId] = useState<number | null>(null);
   const [expandedAttempts, setExpandedAttempts] = useState<
     Record<number, boolean>
   >({});
-  const [exportingWeek, setExportingWeek] = useState<string | null>(null);
+  const [exportingQuizId, setExportingQuizId] = useState<number | null>(null);
 
-  const handleExportCsv = async (weekNumber: string, label: string) => {
-    setExportingWeek(weekNumber);
+  const handleExportCsv = async (quizId: number) => {
+    setExportingQuizId(quizId);
     try {
       const response = await fetch(
-        `/api/admin/responses/export?weekNumber=${encodeURIComponent(weekNumber)}`,
+        `/api/admin/responses/export?quizId=${encodeURIComponent(String(quizId))}`,
       );
       if (!response.ok) {
         alert("Erreur lors de l'export CSV.");
@@ -78,7 +87,7 @@ export function AdminResponsesViewer() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `quiz-${weekNumber}-${label}.csv`;
+      a.download = `quiz-${quizId}.csv`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -86,7 +95,7 @@ export function AdminResponsesViewer() {
     } catch {
       alert("Erreur lors de l'export CSV.");
     } finally {
-      setExportingWeek(null);
+      setExportingQuizId(null);
     }
   };
 
@@ -137,46 +146,48 @@ export function AdminResponsesViewer() {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        {data.weeks.map((week) => (
+        {data.quizzes.map((quiz) => (
           <div
-            key={week.weekNumber}
+            key={quiz.quizId}
             className="rounded-xl border border-[#e4dfda] overflow-hidden"
           >
             <button
               type="button"
               onClick={() =>
-                setExpandedWeek(
-                  expandedWeek === week.weekNumber ? null : week.weekNumber,
+                setExpandedQuizId(
+                  expandedQuizId === quiz.quizId ? null : quiz.quizId,
                 )
               }
               className="w-full bg-white p-4 text-left hover:bg-[#f6f6f6] transition flex items-center justify-between cursor-pointer"
             >
               <div>
                 <p className="font-semibold text-[#1d3d68]">
-                  {week.weekNumber} - {week.label}
+                  Quiz #{quiz.quizId}
                 </p>
-                <p className="text-sm text-[#4b6484]">{week.date}</p>
+                <p className="text-sm text-[#4b6484]">
+                  {formatQuizRange(quiz.startAt, quiz.endAt)}
+                </p>
               </div>
               <div className="flex items-center gap-4">
                 <div className="text-right">
                   <p className="text-sm font-semibold text-[#1d3d68]">
-                    {week.attempts.length} tentatives
+                    {quiz.attempts.length} tentatives
                   </p>
                   <p className="text-xs text-[#4b6484]">
-                    {week.responsesCount} réponses
+                    {quiz.responsesCount} réponses
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleExportCsv(week.weekNumber, week.label);
+                    handleExportCsv(quiz.quizId);
                   }}
-                  disabled={exportingWeek === week.weekNumber}
+                  disabled={exportingQuizId === quiz.quizId}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-[#1d3d68] bg-white px-3 py-1.5 text-xs font-semibold text-[#1d3d68] transition hover:bg-[#1d3d68] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   title="Exporter les tentatives en CSV"
                 >
-                  {exportingWeek === week.weekNumber ? (
+                  {exportingQuizId === quiz.quizId ? (
                     "Export..."
                   ) : (
                     <>
@@ -200,20 +211,20 @@ export function AdminResponsesViewer() {
               </div>
             </button>
 
-            {expandedWeek === week.weekNumber && (
+            {expandedQuizId === quiz.quizId && (
               <div className="border-t border-[#e4dfda] bg-[#f6f6f6] p-4 space-y-4">
                 <div className="rounded-lg border border-[#e4dfda] bg-white/70 p-3">
                   <p className="text-xs font-semibold tracking-wide text-[#4b6484] uppercase">
                     Rappel du quiz
                   </p>
 
-                  {week.questions.length === 0 ? (
+                  {quiz.questions.length === 0 ? (
                     <p className="mt-2 text-sm text-[#4b6484]">
                       Questions indisponibles.
                     </p>
                   ) : (
                     <div className="mt-3 space-y-3">
-                      {week.questions.map((question, index) => (
+                      {quiz.questions.map((question, index) => (
                         <div
                           key={question.id}
                           className="rounded-md border border-[#ece7e2] bg-[#faf9f7] p-3"
@@ -249,10 +260,10 @@ export function AdminResponsesViewer() {
                     Tentatives
                   </h4>
                   <div className="space-y-2">
-                    {week.attempts.length === 0 ? (
+                    {quiz.attempts.length === 0 ? (
                       <p className="text-sm text-[#4b6484]">Aucune tentative</p>
                     ) : (
-                      week.attempts.map((attempt) => (
+                      quiz.attempts.map((attempt) => (
                         <div
                           key={attempt.attemptId}
                           className="bg-white rounded-lg p-3 text-sm border border-[#e4dfda]"

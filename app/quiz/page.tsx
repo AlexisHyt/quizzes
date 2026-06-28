@@ -1,72 +1,69 @@
-import { and, asc, desc, eq, lt, lte } from "drizzle-orm";
+import { and, asc, desc, eq, gte, lt, lte } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { QuizPlayer } from "@/app/quiz/quiz-player";
 import { RecentAttemptsHistory } from "@/app/quiz/recent-attempts-history";
-import { SignOutButton } from "@/app/quiz/sign-out-button";
 import { auth } from "@/auth";
 import { db } from "@/drizzle/db";
-import { questions, quizzes, userQuizStats } from "@/drizzle/schema";
+import {
+  questions,
+  quizAttempts,
+  quizzes,
+  userQuizStats,
+} from "@/drizzle/schema";
 import {
   getActiveOrganizationForSession,
-  getOrganizationMembership,
   getUserOrganizations,
   type OrganizationSession,
 } from "@/lib/organizations";
 
-function formatDateKey(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
+function formatUtcDate(dateInput: Date): string {
+  return dateInput.toLocaleDateString("fr-FR", {
+    timeZone: "UTC",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
 }
 
-function getCurrentWeekMonday(): string {
-  const now = new Date();
-  const monday = new Date(now);
-  const dayOffset = (now.getDay() + 6) % 7;
-  monday.setHours(0, 0, 0, 0);
-  monday.setDate(now.getDate() - dayOffset);
-  return formatDateKey(monday);
+function formatQuizRange(quiz: { startAt: Date; endAt: Date }): string {
+  return `${formatUtcDate(quiz.startAt)} - ${formatUtcDate(quiz.endAt)}`;
 }
 
-async function getCurrentQuizWithQuestions(activeOrganizationId: string) {
-  const currentWeekMonday = getCurrentWeekMonday();
-  const today = formatDateKey(new Date());
+async function getActiveQuizzes(activeOrganizationId: string) {
+  const nowUtc = new Date();
 
-  let [quiz] = await db
+  return db
+    .select({
+      id: quizzes.id,
+      startAt: quizzes.startAt,
+      endAt: quizzes.endAt,
+    })
+    .from(quizzes)
+    .where(
+      and(
+        lte(quizzes.startAt, nowUtc),
+        gte(quizzes.endAt, nowUtc),
+        eq(quizzes.organizationId, activeOrganizationId),
+      ),
+    )
+    .orderBy(asc(quizzes.endAt));
+}
+
+async function getSelectedQuizWithQuestions(
+  activeOrganizationId: string,
+  selectedQuizId: number,
+) {
+  const [quiz] = await db
     .select()
     .from(quizzes)
     .where(
       and(
-        eq(quizzes.date, currentWeekMonday),
+        eq(quizzes.id, selectedQuizId),
         eq(quizzes.organizationId, activeOrganizationId),
       ),
     )
     .limit(1);
-
-  if (!quiz) {
-    [quiz] = await db
-      .select()
-      .from(quizzes)
-      .where(
-        and(
-          lte(quizzes.date, today),
-          eq(quizzes.organizationId, activeOrganizationId),
-        ),
-      )
-      .orderBy(desc(quizzes.date))
-      .limit(1);
-  }
-
-  if (!quiz) {
-    [quiz] = await db
-      .select()
-      .from(quizzes)
-      .where(eq(quizzes.organizationId, activeOrganizationId))
-      .orderBy(asc(quizzes.date))
-      .limit(1);
-  }
 
   if (!quiz) {
     return null;
@@ -86,30 +83,36 @@ async function getCurrentQuizWithQuestions(activeOrganizationId: string) {
 
 async function getPastQuizzes(
   activeOrganizationId: string,
-  excludeId: number | null,
+  excludeIds: number[],
 ) {
-  const currentWeekMonday = getCurrentWeekMonday();
+  const nowUtc = new Date();
 
   const allPast = await db
     .select({
       id: quizzes.id,
-      weekNumber: quizzes.weekNumber,
-      label: quizzes.label,
-      date: quizzes.date,
+      startAt: quizzes.startAt,
+      endAt: quizzes.endAt,
     })
     .from(quizzes)
     .where(
       and(
-        lt(quizzes.date, currentWeekMonday),
+        lt(quizzes.endAt, nowUtc),
         eq(quizzes.organizationId, activeOrganizationId),
       ),
     )
-    .orderBy(desc(quizzes.date));
+    .orderBy(desc(quizzes.endAt));
 
-  return allPast.filter((q) => q.id !== excludeId);
+  return allPast.filter((q) => !excludeIds.includes(q.id));
 }
 
-export default async function QuizPage() {
+export default async function QuizPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    quizId?: string | string[];
+    pastQuizId?: string | string[];
+  }>;
+}) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -142,17 +145,74 @@ export default async function QuizPage() {
     redirect("/organizations");
   }
 
-  const quizData = await getCurrentQuizWithQuestions(activeOrganization.id);
+  const activeQuizzes = await getActiveQuizzes(activeOrganization.id);
+  const parsedSearchParams = await searchParams;
+  const rawQuizId = parsedSearchParams.quizId;
+  const rawPastQuizId = parsedSearchParams.pastQuizId;
+  const selectedQuizId = Number.parseInt(
+    Array.isArray(rawQuizId) ? (rawQuizId[0] ?? "") : (rawQuizId ?? ""),
+    10,
+  );
+  const pastQuizId = Number.parseInt(
+    Array.isArray(rawPastQuizId)
+      ? (rawPastQuizId[0] ?? "")
+      : (rawPastQuizId ?? ""),
+    10,
+  );
+
+  const completedAttempts = await db
+    .select({ quizId: quizAttempts.quizId })
+    .from(quizAttempts)
+    .innerJoin(quizzes, eq(quizAttempts.quizId, quizzes.id))
+    .where(
+      and(
+        eq(quizAttempts.userId, session.user.id),
+        eq(quizAttempts.isRevision, 0),
+        eq(quizzes.organizationId, activeOrganization.id),
+      ),
+    );
+
+  const completedQuizIds = new Set(
+    completedAttempts.map((attempt) => attempt.quizId),
+  );
   const pastQuizzes = await getPastQuizzes(
     activeOrganization.id,
-    quizData?.quiz.id ?? null,
+    activeQuizzes.map((quiz) => quiz.id),
   );
-  const membership = await getOrganizationMembership(
-    session.user.id,
-    activeOrganization.id,
+  const revisableQuizzes = [
+    ...activeQuizzes.filter((quiz) => completedQuizIds.has(quiz.id)),
+    ...pastQuizzes,
+  ];
+  const playableActiveQuizzes = activeQuizzes.filter(
+    (quiz) => !completedQuizIds.has(quiz.id),
   );
-  const canAccessAdmin =
-    !!membership && ["owner", "admin"].includes(membership.role);
+
+  if (
+    !Number.isNaN(pastQuizId) &&
+    revisableQuizzes.some((quiz) => quiz.id === pastQuizId)
+  ) {
+    redirect(`/quiz/${pastQuizId}`);
+  }
+
+  const hasRequestedActiveQuiz =
+    !Number.isNaN(selectedQuizId) &&
+    activeQuizzes.some((quiz) => quiz.id === selectedQuizId);
+
+  if (hasRequestedActiveQuiz && completedQuizIds.has(selectedQuizId)) {
+    redirect(`/quiz/${selectedQuizId}`);
+  }
+
+  const availableActiveQuiz = playableActiveQuizzes[0] ?? null;
+  const resolvedSelectedQuizId = hasRequestedActiveQuiz
+    ? selectedQuizId
+    : (availableActiveQuiz?.id ?? null);
+
+  const quizData = resolvedSelectedQuizId
+    ? await getSelectedQuizWithQuestions(
+        activeOrganization.id,
+        resolvedSelectedQuizId,
+      )
+    : null;
   const [personalStats] = await db
     .select({
       totalPoints: userQuizStats.totalPoints,
@@ -172,86 +232,119 @@ export default async function QuizPage() {
 
   return (
     <div className="grid grid-cols-[2fr_1fr]">
-      <div className="flex min-h-screen items-start justify-center bg-[#e7e0d8] px-6 py-16 text-[#1f3e68]">
+      <div className="flex min-h-screen items-start justify-center bg-[#e7e0d8] px-6 py-10 text-[#1f3e68]">
         <main className="w-full max-w-3xl rounded-2xl border border-[#e4dfda] bg-[#f6f6f6] p-8 shadow-[0_16px_40px_rgba(22,26,29,0.12)] sm:p-10">
           <p className="text-xs font-semibold tracking-[0.22em] text-[#e5533b] uppercase">
             Espace connecte
           </p>
 
           <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#1d3d68]">
-            Bonjour {session.user.name}
+            Quiz actifs
           </h1>
 
           <p className="mt-4 text-lg leading-8 text-[#4b6484]">
-            Tu es bien connecte avec Google ({session.user.email}).
+            Choisis un quiz en cours ou relance une revision sur un quiz passe.
           </p>
 
-          <p className="mt-2 inline-flex rounded-full border border-[#d9d4cf] bg-[#efeeec] px-4 py-1 text-sm font-semibold text-[#1d3d68]">
-            Organisation active : {activeOrganization.name}
-          </p>
-
-          {!quizData || quizData.questions.length === 0 ? (
+          {activeQuizzes.length === 0 ? (
             <p className="mt-8 rounded-xl border border-[#e4dfda] bg-white p-4 text-sm text-[#4b6484]">
               Aucun quiz disponible pour le moment.
             </p>
           ) : (
-            <section className="mt-8">
-              <p className="text-sm font-semibold text-[#e5533b]">
-                {quizData.quiz.weekNumber} - {quizData.quiz.label}
-              </p>
-              <QuizPlayer
-                quizId={quizData.quiz.id}
-                questions={quizData.questions}
-              />
-            </section>
-          )}
+            <>
+              <section className="mt-8 rounded-xl border border-[#e4dfda] bg-white p-4">
+                <h2 className="text-base font-semibold text-[#1d3d68]">
+                  Quizzes en cours
+                </h2>
+                <p className="mt-1 text-sm text-[#4b6484]">
+                  Choisis un quiz actif.
+                </p>
 
-          <div className="mt-8 flex items-center gap-3">
-            {canAccessAdmin && (
-              <a
-                href="/admin"
-                className="inline-flex h-12 items-center justify-center rounded-xl bg-[#1d3d68] px-7 text-base font-semibold text-white transition hover:bg-[#1a2d52]"
-              >
-                Tableau de bord admin
-              </a>
-            )}
-            <a
-              href="/organizations"
-              className="inline-flex h-12 items-center justify-center rounded-xl border border-[#d9d4cf] bg-[#efeeec] px-7 text-base font-semibold text-[#1d3d68] transition hover:bg-[#e8e5e1]"
-            >
-              Organisations
-            </a>
-            <SignOutButton />
-          </div>
+                {playableActiveQuizzes.length > 0 ? (
+                  <ul className="mt-3 space-y-2">
+                    {playableActiveQuizzes.map((quiz) => {
+                      const isSelected = quiz.id === quizData?.quiz.id;
+                      return (
+                        <li key={quiz.id}>
+                          <a
+                            href={`/quiz?quizId=${quiz.id}`}
+                            className={`flex items-center justify-between rounded-xl border px-4 py-3 text-sm transition ${
+                              isSelected
+                                ? "border-[#1d3d68] bg-[#f1f5fb] text-[#1d3d68]"
+                                : "border-[#e4dfda] bg-white text-[#1d3d68] hover:bg-[#e7e0d8]"
+                            }`}
+                          >
+                            <span>{formatQuizRange(quiz)}</span>
+                            <span className="text-xs text-[#4b6484]">
+                              {isSelected ? "Selectionne" : "Jouer"}
+                            </span>
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <p className="mt-3 rounded-lg border border-[#e4dfda] bg-[#f8f8f8] px-3 py-2 text-sm text-[#4b6484]">
+                    Tu as deja complete tous les quizzes en cours.
+                  </p>
+                )}
 
-          {pastQuizzes.length > 0 && (
-            <section className="mt-10">
-              <h2 className="text-lg font-semibold text-[#1d3d68]">
-                Anciens quiz
-              </h2>
-              <p className="mt-1 text-sm text-[#4b6484]">
-                Rejoue un quiz passé en mode révision.
-              </p>
-              <ul className="mt-4 space-y-2">
-                {pastQuizzes.map((q) => (
-                  <li key={q.id}>
-                    <a
-                      href={`/quiz/${q.id}`}
-                      className="flex items-center justify-between rounded-xl border border-[#e4dfda] bg-white px-5 py-3 text-sm font-medium text-[#1d3d68] transition hover:bg-[#e7e0d8]"
+                <form
+                  method="get"
+                  className="mt-4 rounded-xl border border-[#e4dfda] bg-[#f8f8f8] p-3"
+                >
+                  <label
+                    htmlFor="pastQuizId"
+                    className="text-xs font-semibold tracking-wide text-[#4b6484] uppercase"
+                  >
+                    Quiz passes de l'organisation (revision)
+                  </label>
+                  <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+                    <select
+                      id="pastQuizId"
+                      name="pastQuizId"
+                      defaultValue=""
+                      className="w-full rounded-xl border border-[#d9d4cf] bg-white px-4 py-2 text-sm text-[#1d3d68] outline-none focus:border-[#1d3d68]"
+                      disabled={revisableQuizzes.length === 0}
                     >
-                      <span>
-                        <span className="font-semibold text-[#e5533b]">
-                          {q.weekNumber}
-                        </span>
-                        {" — "}
-                        {q.label}
-                      </span>
-                      <span className="text-xs text-[#4b6484]">Rejouer →</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </section>
+                      <option value="" disabled>
+                        {revisableQuizzes.length > 0
+                          ? "Selectionne un quiz passe"
+                          : "Aucun quiz passe"}
+                      </option>
+                      {revisableQuizzes.map((quiz) => (
+                        <option key={quiz.id} value={quiz.id}>
+                          {`Quiz #${quiz.id} — ${formatQuizRange(quiz)}`}
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      type="submit"
+                      className="inline-flex h-10 items-center justify-center rounded-xl bg-[#1d3d68] px-4 text-sm font-semibold text-white transition hover:bg-[#1a2d52] disabled:cursor-not-allowed disabled:opacity-50"
+                      disabled={revisableQuizzes.length === 0}
+                    >
+                      Ouvrir
+                    </button>
+                  </div>
+                </form>
+              </section>
+
+              {quizData && quizData.questions.length > 0 ? (
+                <section className="mt-8">
+                  <p className="text-sm font-semibold text-[#e5533b]">
+                    {formatQuizRange(quizData.quiz)}
+                  </p>
+                  <QuizPlayer
+                    quizId={quizData.quiz.id}
+                    questions={quizData.questions}
+                  />
+                </section>
+              ) : (
+                <p className="mt-8 rounded-xl border border-[#e4dfda] bg-white p-4 text-sm text-[#4b6484]">
+                  Aucune question disponible pour ce quiz.
+                </p>
+              )}
+            </>
           )}
         </main>
       </div>

@@ -80,6 +80,30 @@ export async function POST(request: Request) {
       return Response.json({ error: "Quiz not found" }, { status: 404 });
     }
 
+    if (!isRevision) {
+      const [existingRealAttempt] = await db
+        .select({ id: quizAttempts.id })
+        .from(quizAttempts)
+        .where(
+          and(
+            eq(quizAttempts.userId, session.user.id),
+            eq(quizAttempts.quizId, quizId),
+            eq(quizAttempts.isRevision, 0),
+          ),
+        )
+        .limit(1);
+
+      if (existingRealAttempt) {
+        return Response.json(
+          {
+            error:
+              "Ce quiz a deja ete complete en mode normal. Utilise le mode revision.",
+          },
+          { status: 409 },
+        );
+      }
+    }
+
     // Calculer le score et préparer les réponses
     const evaluatedResponses = quizQuestions.map((question) => {
       const selectedAnswer = answers[question.id];

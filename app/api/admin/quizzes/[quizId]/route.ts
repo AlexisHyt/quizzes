@@ -5,9 +5,8 @@ import { db } from "@/drizzle/db";
 import { member, questions, quizzes } from "@/drizzle/schema";
 
 type QuizPayload = {
-  weekNumber: string;
-  date: string;
-  label: string;
+  startDate: string;
+  endDate: string;
   questions: Array<{
     questionText: string;
     options: string[];
@@ -16,10 +15,10 @@ type QuizPayload = {
   }>;
 };
 
-const WEEK_NUMBER_PATTERN = /^S\d{2}$/;
+const DATE_ONLY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
-function isMondayDate(dateInput: string): boolean {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateInput)) {
+function isDateOnly(dateInput: string): boolean {
+  if (!DATE_ONLY_PATTERN.test(dateInput)) {
     return false;
   }
 
@@ -32,9 +31,13 @@ function isMondayDate(dateInput: string): boolean {
     !Number.isNaN(date.getTime()) &&
     date.getFullYear() === year &&
     date.getMonth() === (month ?? 1) - 1 &&
-    date.getDate() === day &&
-    date.getDay() === 1
+    date.getDate() === day
   );
+}
+
+function toUtcRange(dateOnly: string, endOfDay: boolean): Date {
+  const timePart = endOfDay ? "23:59:59.999" : "00:00:00.000";
+  return new Date(`${dateOnly}T${timePart}Z`);
 }
 
 function normalizePayload(body: unknown): QuizPayload | null {
@@ -44,19 +47,21 @@ function normalizePayload(body: unknown): QuizPayload | null {
 
   const candidate = body as Partial<QuizPayload>;
   if (
-    typeof candidate.weekNumber !== "string" ||
-    typeof candidate.date !== "string" ||
-    typeof candidate.label !== "string" ||
+    typeof candidate.startDate !== "string" ||
+    typeof candidate.endDate !== "string" ||
     !Array.isArray(candidate.questions) ||
     candidate.questions.length === 0
   ) {
     return null;
   }
 
-  if (
-    !WEEK_NUMBER_PATTERN.test(candidate.weekNumber.trim()) ||
-    !isMondayDate(candidate.date)
-  ) {
+  if (!isDateOnly(candidate.startDate) || !isDateOnly(candidate.endDate)) {
+    return null;
+  }
+
+  const startAt = toUtcRange(candidate.startDate, false);
+  const endAt = toUtcRange(candidate.endDate, true);
+  if (startAt.getTime() > endAt.getTime()) {
     return null;
   }
 
@@ -101,9 +106,8 @@ function normalizePayload(body: unknown): QuizPayload | null {
   }
 
   return {
-    weekNumber: candidate.weekNumber.trim(),
-    date: candidate.date,
-    label: candidate.label.trim(),
+    startDate: candidate.startDate,
+    endDate: candidate.endDate,
     questions: normalizedQuestions as QuizPayload["questions"],
   };
 }
@@ -201,9 +205,8 @@ export async function PATCH(
     await db
       .update(quizzes)
       .set({
-        weekNumber: payload.weekNumber,
-        date: payload.date,
-        label: payload.label,
+        startAt: toUtcRange(payload.startDate, false),
+        endAt: toUtcRange(payload.endDate, true),
         updatedAt: new Date(),
       })
       .where(eq(quizzes.id, quizId));
@@ -223,18 +226,6 @@ export async function PATCH(
 
     return Response.json({ ok: true });
   } catch (error) {
-    if (
-      error instanceof Error &&
-      /quizzes_organization_week_unique/.test(error.message)
-    ) {
-      return Response.json(
-        {
-          error:
-            "Un quiz existe déjà pour cette semaine dans cette organisation.",
-        },
-        { status: 409 },
-      );
-    }
 
     console.error("Error updating admin quiz:", error);
     return Response.json({ error: "Internal server error" }, { status: 500 });

@@ -63,15 +63,14 @@ export async function GET() {
         medal: quizAttempts.medal,
         isRevision: quizAttempts.isRevision,
         completedAt: quizAttempts.completedAt,
-        weekNumber: quizzes.weekNumber,
-        date: quizzes.date,
-        label: quizzes.label,
+        startAt: quizzes.startAt,
+        endAt: quizzes.endAt,
       })
       .from(quizAttempts)
       .innerJoin(user, eq(quizAttempts.userId, user.id))
       .innerJoin(quizzes, eq(quizAttempts.quizId, quizzes.id))
       .where(eq(quizzes.organizationId, activeOrganizationId))
-      .orderBy(desc(quizzes.date));
+      .orderBy(desc(quizzes.endAt), desc(quizAttempts.completedAt));
 
     // Récupérer toutes les réponses utilisateur
     const allResponses = await db
@@ -86,9 +85,6 @@ export async function GET() {
         selectedAnswer: userResponses.selectedAnswer,
         isCorrect: userResponses.isCorrect,
         createdAt: userResponses.createdAt,
-        weekNumber: quizzes.weekNumber,
-        date: quizzes.date,
-        label: quizzes.label,
       })
       .from(userResponses)
       .innerJoin(user, eq(userResponses.userId, user.id))
@@ -104,7 +100,6 @@ export async function GET() {
         options: questions.options,
         correctAnswer: questions.correctAnswer,
         orderIndex: questions.orderIndex,
-        weekNumber: quizzes.weekNumber,
       })
       .from(questions)
       .innerJoin(quizzes, eq(questions.quizId, quizzes.id))
@@ -112,18 +107,15 @@ export async function GET() {
       .orderBy(asc(questions.orderIndex));
 
     type AttemptWithResponses = (typeof allAttempts)[number] & {
-      responses: Array<
-        Omit<(typeof allResponses)[number], "weekNumber" | "date" | "label">
-      >;
+      responses: Array<(typeof allResponses)[number]>;
     };
 
-    // Grouper par semaine
-    const groupedByWeek: Record<
-      string,
+    const groupedByQuizId: Record<
+      number,
       {
-        weekNumber: string;
-        date: string;
-        label: string;
+        quizId: number;
+        startAt: Date;
+        endAt: Date;
         questions: Array<{
           id: number;
           quizId: number;
@@ -139,30 +131,22 @@ export async function GET() {
 
     const responsesByAttemptId = new Map<
       number,
-      Array<
-        Omit<(typeof allResponses)[number], "weekNumber" | "date" | "label">
-      >
+      Array<(typeof allResponses)[number]>
     >();
 
     for (const response of allResponses) {
-      const {
-        weekNumber: _weekNumber,
-        date: _date,
-        label: _label,
-        ...responseData
-      } = response;
       const attemptResponses =
         responsesByAttemptId.get(response.attemptId) ?? [];
-      attemptResponses.push(responseData);
+      attemptResponses.push(response);
       responsesByAttemptId.set(response.attemptId, attemptResponses);
     }
 
     for (const attempt of allAttempts) {
-      if (!groupedByWeek[attempt.weekNumber]) {
-        groupedByWeek[attempt.weekNumber] = {
-          weekNumber: attempt.weekNumber,
-          date: attempt.date,
-          label: attempt.label,
+      if (!groupedByQuizId[attempt.quizId]) {
+        groupedByQuizId[attempt.quizId] = {
+          quizId: attempt.quizId,
+          startAt: attempt.startAt,
+          endAt: attempt.endAt,
           questions: [],
           attempts: [],
           responsesCount: 0,
@@ -172,29 +156,33 @@ export async function GET() {
       const attemptResponses =
         responsesByAttemptId.get(attempt.attemptId) ?? [];
 
-      groupedByWeek[attempt.weekNumber].attempts.push({
+      groupedByQuizId[attempt.quizId].attempts.push({
         ...attempt,
         responses: attemptResponses,
       });
-      groupedByWeek[attempt.weekNumber].responsesCount +=
+      groupedByQuizId[attempt.quizId].responsesCount +=
         attemptResponses.length;
     }
 
     for (const question of allQuestions) {
-      if (!groupedByWeek[question.weekNumber]) {
+      if (!groupedByQuizId[question.quizId]) {
         continue;
       }
 
-      const { weekNumber: _weekNumber, ...questionData } = question;
-      groupedByWeek[question.weekNumber].questions.push(questionData);
+      groupedByQuizId[question.quizId].questions.push(question);
     }
 
-    // Convertir en tableau et trier par date décroissante
-    const weeks = Object.values(groupedByWeek).sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+    const quizzesData = Object.values(groupedByQuizId).sort(
+      (a, b) => b.endAt.getTime() - a.endAt.getTime(),
     );
 
-    return Response.json({ weeks });
+    return Response.json({
+      quizzes: quizzesData.map((quizData) => ({
+        ...quizData,
+        startAt: quizData.startAt.toISOString(),
+        endAt: quizData.endAt.toISOString(),
+      })),
+    });
   } catch (error) {
     console.error("Error fetching admin responses:", error);
     return Response.json({ error: "Internal server error" }, { status: 500 });

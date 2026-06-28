@@ -19,6 +19,7 @@ import {
   getOrganizationMembership,
   getUserOrganizations,
 } from "@/lib/organizations";
+import { slugify } from "@/lib/utils";
 
 function getFirst(value: FormDataEntryValue | null): string {
   return typeof value === "string" ? value : "";
@@ -31,11 +32,12 @@ export async function createOrganizationAction(formData: FormData) {
   }
 
   const name = getFirst(formData.get("name")).trim();
-  const slug = getFirst(formData.get("slug")).trim().toLowerCase();
 
-  if (!name || !slug) {
+  if (!name) {
     redirect("/organizations?error=missing-data");
   }
+
+  const slug = slugify(name);
 
   const organizationId = randomUUID();
   const now = new Date();
@@ -265,3 +267,32 @@ export async function leaveOrganizationAction(formData: FormData) {
 export async function switchOrganizationAndGoQuizAction(formData: FormData) {
   return setActiveOrganizationAction(formData);
 }
+
+// Utilisée par /select-organization pour choisir une org à la connexion et rediriger vers /quiz
+export async function selectOrganizationAndGoAction(formData: FormData) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) {
+    redirect("/");
+  }
+
+  const organizationId = getFirst(formData.get("organizationId"));
+  if (!organizationId) {
+    redirect("/select-organization");
+  }
+
+  const membership = await getOrganizationMembership(
+    session.user.id,
+    organizationId,
+  );
+  if (!membership) {
+    redirect("/select-organization?error=forbidden");
+  }
+
+  await db
+    .update(sessionTable)
+    .set({ activeOrganizationId: organizationId })
+    .where(eq(sessionTable.userId, session.user.id));
+
+  redirect("/quiz");
+}
+

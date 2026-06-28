@@ -9,7 +9,12 @@ export default async function Home() {
   });
 
   if (session) {
-    redirect("/organizations");
+    // Organisation déjà active → aller directement au quiz
+    if (session.session?.activeOrganizationId) {
+      redirect("/quiz");
+    }
+    // Pas d'organisation active → sélecteur à la connexion
+    redirect("/select-organization");
   }
 
   return <LoginCard />;

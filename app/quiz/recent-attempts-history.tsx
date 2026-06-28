@@ -4,15 +4,25 @@ import { useEffect, useState } from "react";
 
 type AttemptRecord = {
   attemptId: number;
-  weekNumber: string;
-  label: string;
-  date: string;
+  quizId: number;
+  startAt: string;
+  endAt: string;
   score: number;
   totalQuestions: number;
   pointsEarned: number;
   medal: string;
   completedAt: string;
 };
+
+function formatRange(startAt: string, endAt: string): string {
+  const formatOpts: Intl.DateTimeFormatOptions = {
+    timeZone: "UTC",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  };
+  return `${new Date(startAt).toLocaleDateString("fr-FR", formatOpts)} - ${new Date(endAt).toLocaleDateString("fr-FR", formatOpts)}`;
+}
 
 export const getMedalEmoji = (medal: string): string => {
   if (medal === "gold") return "🥇";
@@ -74,7 +84,7 @@ export function RecentAttemptsHistory() {
         >
           <div className="flex-1">
             <p className="font-semibold text-[#1d3d68]">
-              {attempt.weekNumber} — {attempt.label}
+              Quiz #{attempt.quizId} — {formatRange(attempt.startAt, attempt.endAt)}
             </p>
             <p className="text-xs text-[#4b6484]">
               {new Date(attempt.completedAt).toLocaleDateString("fr-FR")}

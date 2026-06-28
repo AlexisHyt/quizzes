@@ -187,7 +187,7 @@ export async function getOrganizationQuizIds(organizationId: string) {
     .select({ id: quizzes.id })
     .from(quizzes)
     .where(eq(quizzes.organizationId, organizationId))
-    .orderBy(desc(quizzes.date));
+    .orderBy(desc(quizzes.endAt));
 }
 
 export async function getOrganizationQuizById(
