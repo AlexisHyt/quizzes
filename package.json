@@ -10,14 +10,18 @@
     "format:fix": "biome check . --write"
   },
   "dependencies": {
-    "better-auth": "^1.6.15",
+    "@better-auth/api-key": "1.6.23",
+    "@better-auth/core": "1.6.23",
+    "better-auth": "1.6.23",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
     "next": "16.2.7",
     "pg": "^8.21.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "resend": "^6.12.4"
+    "resend": "^6.12.4",
+    "swagger-ui-react": "^5.27.1",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
@@ -26,6 +30,7 @@
     "@types/pg": "^8.20.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/swagger-ui-react": "^5.18.0",
     "drizzle-kit": "^0.31.10",
     "tailwindcss": "^4",
     "tsx": "^4.22.4",

@@ -1,7 +1,8 @@
 import { betterAuth } from "better-auth";
+import { apiKey } from "@better-auth/api-key";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
-import { admin, organization } from "better-auth/plugins";
+import { organization } from "better-auth/plugins";
 import { db } from "@/drizzle/db";
 import * as schema from "@/drizzle/schema";
 import { sendOrganizationInvitationEmail } from "@/lib/emails/send-organization-invitation";
@@ -21,10 +22,12 @@ export const auth = betterAuth({
   },
   plugins: [
     nextCookies(),
-    admin(),
+    apiKey({
+      defaultPrefix: "qz_",
+    }),
     organization({
       allowUserToCreateOrganization: true,
-      creatorRole: "owner",
+      creatorRole: "admin",
       sendInvitationEmail: async (data, request) => {
         await sendOrganizationInvitationEmail({
           id: data.id,

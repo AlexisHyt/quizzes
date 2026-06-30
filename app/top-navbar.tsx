@@ -17,7 +17,7 @@ export function TopNavbar({
   return (
     <header className="w-full border-b border-[#d9d4cf] bg-[#f6f6f6] text-[#1d3d68]">
       <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
-        <div className="min-w-0">
+        <a className="min-w-0" href={"/account"}>
           <p className="truncate text-sm font-semibold">{user.name}</p>
           <p className="truncate text-xs text-[#4b6484]">{user.email}</p>
           {activeOrganizationName ? (
@@ -25,7 +25,7 @@ export function TopNavbar({
               Organisation active : {activeOrganizationName}
             </p>
           ) : null}
-        </div>
+        </a>
 
         <nav className="flex flex-wrap items-center gap-2">
           <a
@@ -54,4 +54,3 @@ export function TopNavbar({
     </header>
   );
 }
-

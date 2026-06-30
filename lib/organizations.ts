@@ -17,7 +17,6 @@ export type OrganizationSession = {
     id: string;
     email: string;
     name: string;
-    role?: string | null;
   };
 };
 
@@ -162,7 +161,7 @@ export async function isOrganizationAdmin(
   organizationId: string,
 ) {
   const membership = await getOrganizationMembership(userId, organizationId);
-  return membership ? ["owner", "admin"].includes(membership.role) : false;
+  return membership ? membership.role === "admin" : false;
 }
 
 export async function getOrganizationById(organizationId: string) {

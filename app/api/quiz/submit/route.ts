@@ -43,7 +43,6 @@ export async function POST(request: Request) {
         id: session.user.id,
         email: session.user.email,
         name: session.user.name,
-        role: session.user.role,
       },
     };
 

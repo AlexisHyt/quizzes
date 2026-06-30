@@ -25,6 +25,8 @@ function getFirst(value: FormDataEntryValue | null): string {
   return typeof value === "string" ? value : "";
 }
 
+const ORGANIZATION_ROLES = ["member", "developer", "admin"] as const;
+
 export async function createOrganizationAction(formData: FormData) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {
@@ -160,7 +162,12 @@ export async function sendInvitationAction(formData: FormData) {
 
   const organizationId = getFirst(formData.get("organizationId"));
   const email = getFirst(formData.get("email")).trim();
-  const role = getFirst(formData.get("role")).trim() || "member";
+  const requestedRole = getFirst(formData.get("role")).trim() || "member";
+  const role = ORGANIZATION_ROLES.includes(
+    requestedRole as (typeof ORGANIZATION_ROLES)[number],
+  )
+    ? requestedRole
+    : "member";
 
   if (!organizationId || !email) {
     redirect("/organizations?error=missing-data");
@@ -170,7 +177,7 @@ export async function sendInvitationAction(formData: FormData) {
     session.user.id,
     organizationId,
   );
-  if (!membership || !["owner", "admin"].includes(membership.role)) {
+  if (!membership || membership.role !== "admin") {
     redirect("/organizations?error=forbidden");
   }
 
@@ -227,19 +234,19 @@ export async function leaveOrganizationAction(formData: FormData) {
     redirect("/organizations?error=forbidden");
   }
 
-  if (membership.role === "owner") {
-    const owners = await db
+  if (membership.role === "admin") {
+    const admins = await db
       .select({ id: member.id })
       .from(member)
       .where(
         and(
           eq(member.organizationId, organizationId),
-          eq(member.role, "owner"),
+          eq(member.role, "admin"),
         ),
       );
 
-    if (owners.length <= 1) {
-      redirect("/organizations?error=last-owner");
+    if (admins.length <= 1) {
+      redirect("/organizations?error=last-admin");
     }
   }
 
@@ -261,6 +268,41 @@ export async function leaveOrganizationAction(formData: FormData) {
       .where(eq(sessionTable.userId, session.user.id));
   }
 
+  redirect("/organizations");
+}
+
+export async function deleteOrganizationAction(formData: FormData) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) {
+    redirect("/");
+  }
+
+  const organizationId = getFirst(formData.get("organizationId"));
+  if (!organizationId) {
+    redirect("/organizations");
+  }
+
+  const membership = await getOrganizationMembership(
+    session.user.id,
+    organizationId,
+  );
+  if (!membership || membership.role !== "admin") {
+    redirect("/organizations?error=forbidden");
+  }
+
+  // Hard delete: la suppression de l'organisation supprime en cascade
+  // quizzes, questions, réponses, tentatives, statistiques, membres et
+  // invitations (contraintes onDelete: "cascade" du schéma).
+  await db.delete(organization).where(eq(organization.id, organizationId));
+
+  // Réinitialise l'organisation active de la session si nécessaire.
+  const organizations = await getUserOrganizations(session.user.id);
+  await db
+    .update(sessionTable)
+    .set({ activeOrganizationId: organizations[0]?.organizationId ?? null })
+    .where(eq(sessionTable.userId, session.user.id));
+
+  revalidatePath("/organizations");
   redirect("/organizations");
 }
 

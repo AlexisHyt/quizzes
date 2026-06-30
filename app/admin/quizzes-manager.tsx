@@ -2,10 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+const MIN_OPTIONS = 2;
+const MAX_OPTIONS = 8;
+
 type ManagedQuestion = {
   id?: number;
   questionText: string;
-  options: [string, string, string, string];
+  options: string[];
   correctAnswer: number;
   explanation: string;
 };
@@ -26,7 +29,7 @@ type DurationPreset = "custom" | "week" | "month";
 function createEmptyQuestion(): ManagedQuestion {
   return {
     questionText: "",
-    options: ["", "", "", ""],
+    options: ["", ""],
     correctAnswer: 0,
     explanation: "",
   };
@@ -152,7 +155,7 @@ export function AdminQuizzesManager() {
       questions: quiz.questions.map((question) => ({
         id: question.id,
         questionText: question.questionText,
-        options: [...question.options] as [string, string, string, string],
+        options: [...question.options],
         correctAnswer: question.correctAnswer,
         explanation: question.explanation,
       })),
@@ -177,7 +180,7 @@ export function AdminQuizzesManager() {
       durationPreset: "custom",
       questions: quiz.questions.map((question) => ({
         questionText: question.questionText,
-        options: [...question.options] as [string, string, string, string],
+        options: [...question.options],
         correctAnswer: question.correctAnswer,
         explanation: question.explanation,
       })),
@@ -199,16 +202,55 @@ export function AdminQuizzesManager() {
   ) {
     setForm((prev) => {
       const questions = [...prev.questions];
-      const nextOptions = [...questions[questionIndex].options] as [
-        string,
-        string,
-        string,
-        string,
-      ];
+      const nextOptions = [...questions[questionIndex].options];
       nextOptions[optionIndex] = value;
       questions[questionIndex] = {
         ...questions[questionIndex],
         options: nextOptions,
+      };
+      return { ...prev, questions };
+    });
+  }
+
+  function addOption(questionIndex: number) {
+    setForm((prev) => {
+      const questions = [...prev.questions];
+      const target = questions[questionIndex];
+      if (target.options.length >= MAX_OPTIONS) {
+        return prev;
+      }
+
+      questions[questionIndex] = {
+        ...target,
+        options: [...target.options, ""],
+      };
+      return { ...prev, questions };
+    });
+  }
+
+  function removeOption(questionIndex: number, optionIndex: number) {
+    setForm((prev) => {
+      const questions = [...prev.questions];
+      const target = questions[questionIndex];
+      if (target.options.length <= MIN_OPTIONS) {
+        return prev;
+      }
+
+      const nextOptions = target.options.filter(
+        (_, index) => index !== optionIndex,
+      );
+
+      let nextCorrectAnswer = target.correctAnswer;
+      if (optionIndex === target.correctAnswer) {
+        nextCorrectAnswer = 0;
+      } else if (optionIndex < target.correctAnswer) {
+        nextCorrectAnswer = target.correctAnswer - 1;
+      }
+
+      questions[questionIndex] = {
+        ...target,
+        options: nextOptions,
+        correctAnswer: nextCorrectAnswer,
       };
       return { ...prev, questions };
     });
@@ -478,11 +520,21 @@ export function AdminQuizzesManager() {
 
                 <div className="mt-3 grid gap-2 sm:grid-cols-2">
                   {question.options.map((option, optionIndex) => (
-                    <label
+                    <div
                       key={`${question.id ?? index}-opt-${optionIndex}`}
                       className="text-sm font-medium text-[#1d3d68]"
                     >
-                      Option {optionIndex + 1}
+                      <div className="flex items-center justify-between">
+                        <span>Option {optionIndex + 1}</span>
+                        <button
+                          type="button"
+                          className="rounded border border-[#e5533b] px-2 py-0.5 text-xs text-[#e5533b] disabled:opacity-40 cursor-pointer"
+                          onClick={() => removeOption(index, optionIndex)}
+                          disabled={question.options.length <= MIN_OPTIONS}
+                        >
+                          Retirer
+                        </button>
+                      </div>
                       <input
                         required
                         value={option}
@@ -491,9 +543,18 @@ export function AdminQuizzesManager() {
                         }
                         className="mt-1 w-full rounded-lg border border-[#d9d4cf] px-3 py-2 text-sm"
                       />
-                    </label>
+                    </div>
                   ))}
                 </div>
+
+                <button
+                  type="button"
+                  className="mt-2 rounded border border-[#1d3d68] px-3 py-1 text-xs font-semibold text-[#1d3d68] disabled:opacity-40 cursor-pointer"
+                  onClick={() => addOption(index)}
+                  disabled={question.options.length >= MAX_OPTIONS}
+                >
+                  Ajouter une option
+                </button>
 
                 <div className="mt-3 grid gap-2 sm:grid-cols-2">
                   <label className="text-sm font-medium text-[#1d3d68]">
@@ -507,10 +568,14 @@ export function AdminQuizzesManager() {
                       }
                       className="mt-1 w-full rounded-lg border border-[#d9d4cf] px-3 py-2 text-sm"
                     >
-                      <option value="0">Option 1</option>
-                      <option value="1">Option 2</option>
-                      <option value="2">Option 3</option>
-                      <option value="3">Option 4</option>
+                      {question.options.map((_, optionIndex) => (
+                        <option
+                          key={`${question.id ?? index}-correct-${optionIndex}`}
+                          value={String(optionIndex)}
+                        >
+                          Option {optionIndex + 1}
+                        </option>
+                      ))}
                     </select>
                   </label>
 

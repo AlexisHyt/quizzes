@@ -129,7 +129,6 @@ export default async function QuizPage({
       id: session.user.id,
       email: session.user.email,
       name: session.user.name,
-      role: session.user.role,
     },
   };
 

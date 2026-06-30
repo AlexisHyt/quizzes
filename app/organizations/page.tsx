@@ -7,10 +7,12 @@ import {
   sendInvitationAction,
   setActiveOrganizationAction,
 } from "@/app/organizations/actions";
+import { DeleteOrganizationButton } from "@/app/organizations/delete-organization-button";
 import { auth } from "@/auth";
 import {
   getActiveOrganizationForSession,
   getOrganizationInvitations,
+  getOrganizationMembership,
   getOrganizationMembers,
   getPendingInvitationsForUser,
   getUserOrganizations,
@@ -23,15 +25,18 @@ export default async function OrganizationsPage() {
     redirect("/");
   }
 
+  const activeOrganizationIdFromSession =
+    (session.session as { activeOrganizationId?: string | null } | undefined)
+      ?.activeOrganizationId ?? null;
+
   const organizationSession: OrganizationSession = {
     session: {
-      activeOrganizationId: session.session?.activeOrganizationId ?? null,
+      activeOrganizationId: activeOrganizationIdFromSession,
     },
     user: {
       id: session.user.id,
       email: session.user.email,
       name: session.user.name,
-      role: session.user.role,
     },
   };
 
@@ -49,6 +54,9 @@ export default async function OrganizationsPage() {
   const invitations = activeOrganizationId
     ? await getOrganizationInvitations(activeOrganizationId)
     : [];
+  const activeMembership = activeOrganizationId
+    ? await getOrganizationMembership(session.user.id, activeOrganizationId)
+    : null;
 
   return (
     <div className="flex min-h-screen items-start justify-center bg-[#e7e0d8] px-6 py-10 text-[#1f3e68]">
@@ -58,7 +66,7 @@ export default async function OrganizationsPage() {
             Organisations
           </p>
           <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#1d3d68]">
-            Gerer les organisations
+            Gérer les organisations
           </h1>
           <p className="mt-3 text-lg leading-8 text-[#4b6484]">
             Crée ou rejoins une organisation, puis active-en une pour accéder
@@ -185,7 +193,8 @@ export default async function OrganizationsPage() {
         </section>
 
         {activeOrganizationId &&
-        ["owner", "admin"].includes(organizationSession.user.role || "") ? (
+        activeMembership &&
+        activeMembership.role === "admin" ? (
           <section className="grid gap-6 lg:grid-cols-2">
             <form
               action={sendInvitationAction}
@@ -215,8 +224,8 @@ export default async function OrganizationsPage() {
                   className="w-full rounded-xl border border-[#d9d4cf] px-4 py-3 outline-none focus:border-[#1d3d68]"
                 >
                   <option value="member">member</option>
+                  <option value="developer">developer</option>
                   <option value="admin">admin</option>
-                  <option value="owner">owner</option>
                 </select>
               </label>
               <button
@@ -292,6 +301,29 @@ export default async function OrganizationsPage() {
               Quitter l’organisation active
             </button>
           </form>
+
+          {activeOrganizationId &&
+          activeMembership &&
+          activeMembership.role === "admin" ? (
+            <div className="mt-6 border-t border-[#e4dfda] pt-5">
+              <h3 className="text-sm font-semibold text-[#e5533b]">
+                Zone de danger
+              </h3>
+              <p className="mt-1 text-sm text-[#4b6484]">
+                Supprime définitivement cette organisation ainsi que tous ses
+                quizzes, questions, réponses et statistiques. Cette action est
+                irréversible.
+              </p>
+              <div className="mt-4">
+                <DeleteOrganizationButton
+                  organizationId={activeOrganizationId}
+                  organizationName={
+                    activeOrganization?.name ?? "cette organisation"
+                  }
+                />
+              </div>
+            </div>
+          ) : null}
         </section>
       </main>
     </div>

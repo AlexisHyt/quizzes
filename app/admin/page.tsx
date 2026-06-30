@@ -27,7 +27,6 @@ export default async function AdminResponsesPage() {
       id: session.user.id,
       email: session.user.email,
       name: session.user.name,
-      role: session.user.role,
     },
   };
 
@@ -43,7 +42,7 @@ export default async function AdminResponsesPage() {
   );
 
   // Rediriger si l'utilisateur n'est pas admin de l'organisation active
-  if (!membership || !["owner", "admin"].includes(membership.role)) {
+  if (!membership || membership.role !== "admin") {
     redirect("/quiz");
   }
 

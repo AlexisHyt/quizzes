@@ -40,7 +40,6 @@ export default async function RootLayout({
           id: session.user.id,
           email: session.user.email,
           name: session.user.name,
-          role: session.user.role,
         },
       }
     : null;
@@ -61,9 +60,7 @@ export default async function RootLayout({
           <TopNavbar
             user={{ name: session.user.name, email: session.user.email }}
             activeOrganizationName={activeOrganization?.name ?? null}
-            canAccessAdmin={
-              !!membership && ["owner", "admin"].includes(membership.role)
-            }
+            canAccessAdmin={!!membership && membership.role === "admin"}
           />
         ) : null}
         {children}

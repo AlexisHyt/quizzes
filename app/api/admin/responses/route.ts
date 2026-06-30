@@ -42,10 +42,7 @@ export async function GET() {
       )
       .limit(1);
 
-    if (
-      !activeMembership ||
-      !["owner", "admin"].includes(activeMembership.role)
-    ) {
+    if (!activeMembership || activeMembership.role !== "admin") {
       return Response.json({ error: "Forbidden" }, { status: 403 });
     }
 

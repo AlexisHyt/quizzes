@@ -75,11 +75,12 @@ function normalizePayload(body: unknown): QuizPayload | null {
       typeof q.questionText !== "string" ||
       typeof q.explanation !== "string" ||
       !Array.isArray(q.options) ||
-      q.options.length !== 4 ||
+      q.options.length < 2 ||
+      q.options.length > 8 ||
       q.options.some((option) => typeof option !== "string") ||
       typeof q.correctAnswer !== "number" ||
       q.correctAnswer < 0 ||
-      q.correctAnswer > 3
+      q.correctAnswer >= q.options.length
     ) {
       return null;
     }
@@ -142,10 +143,7 @@ async function getAdminOrganizationContext() {
     )
     .limit(1);
 
-  if (
-    !activeMembership ||
-    !["owner", "admin"].includes(activeMembership.role)
-  ) {
+  if (!activeMembership || activeMembership.role !== "admin") {
     return { error: Response.json({ error: "Forbidden" }, { status: 403 }) };
   }
 
